@@ -37,10 +37,16 @@ public class ReflectionAccessor<I> implements InputAccessor<I> {
 		} catch (NoSuchMethodException nsme) {
 			throw new IllegalArgumentException("Getter method for " + inputFieldName + " not found.");
 		}
-		try {
-			String methodName = setterMethodName(inputFieldName);
-			this.inputSetter = this.inputObject.getClass().getMethod(methodName, inputFieldClass);
-		} catch (NoSuchMethodException nsme) {
+		
+		String methodName = setterMethodName(inputFieldName);
+		Class<?> clazz = inputFieldClass;
+		while (this.inputSetter == null) {
+			try {
+				this.inputSetter = this.inputObject.getClass().getMethod(methodName, clazz);
+			} catch (NoSuchMethodException nsme) { }
+			clazz = clazz.getSuperclass();
+		}
+		if (this.inputSetter == null) {
 			throw new IllegalArgumentException("Setter method for " + inputFieldName + " not found.");
 		}
 	}

@@ -78,8 +78,10 @@ public interface Processor {
 	 * @param fieldName			name of field
 	 * 
 	 * @return					field type
+	 * 
+	 * @throws ZenputException if field name is not registered
 	 */
-	public Class<?> getRegisteredFieldType(String fieldName);
+	public Class<?> getRegisteredFieldType(String fieldName) throws ZenputException;
 	
 	/**
 	 * Returns the title of the field with given field name.  The title is a String

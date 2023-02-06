@@ -251,8 +251,12 @@ public class SourceProcessor implements Processor, ValueRetriever {
 	}
 
 	@Override
-	public Class<?> getRegisteredFieldType(String fieldName) {
-		return this.fieldTypes.get(this.fieldOrder.get(fieldName).intValue());
+	public Class<?> getRegisteredFieldType(String fieldName) throws ZenputException {
+		Integer order = this.fieldOrder.get(fieldName);
+		if (order == null) {
+			throw new ZenputException("Field " + fieldName + " is not registered with the processor.");
+		}
+		return this.fieldTypes.get(order.intValue());
 	}
 
 	@Override

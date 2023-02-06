@@ -5,6 +5,10 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<name>Zenput</name>
 	<description>Input validation framework for Java Swing</description>
+	<properties>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>

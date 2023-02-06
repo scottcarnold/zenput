@@ -162,7 +162,7 @@ public class InputProcessor implements Processor, ValueRetriever {
 	 * @param enumClass		enum class
 	 * @throws ZenputException
 	 */
-	public <T> void registerInput(String fieldName, JComboBox comboBox, Class<T> enumClass) throws ZenputException {
+	public <T> void registerInput(String fieldName, JComboBox<T> comboBox, Class<T> enumClass) throws ZenputException {
 		InputAccessor<T> comboBoxAccessor = new ReflectionAccessor<T>(comboBox, "selectedItem", enumClass);
 		SameTypeConverter<T> converter = new SameTypeConverter<T>();
 		registerInput(fieldName, comboBoxAccessor, converter);
@@ -309,7 +309,7 @@ public class InputProcessor implements Processor, ValueRetriever {
 	}
 
 	@Override
-	public Class<?> getRegisteredFieldType(String fieldName) {
+	public Class<?> getRegisteredFieldType(String fieldName) throws ZenputException {
 		return processor.getRegisteredFieldType(fieldName);
 	}
 

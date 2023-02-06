@@ -34,17 +34,21 @@ public class AnnotationHandler {
 	
 	public static void registerFields(Processor processor, Object... sourceObjects) {
 		for (Object sourceObject : sourceObjects) {
-			Field[] fields = sourceObject.getClass().getDeclaredFields();
-			for (Field field : fields) {
-				InputField zenputFieldAnno = field.getAnnotation(InputField.class);
-				if (zenputFieldAnno != null) {
-					try {
-						processor.registerField(field.getName(), zenputFieldAnno.title(), sourceObject);
-						registerValidators(processor, field);
-					} catch (ZenputException ze) {
-						log.error("Field " + field.getName() + " could not be registered", ze);
+			Class<?> clazz = sourceObject.getClass();
+			while (clazz != null  && clazz != java.lang.Object.class) {
+				Field[] fields = clazz.getDeclaredFields();
+				for (Field field : fields) {
+					InputField zenputFieldAnno = field.getAnnotation(InputField.class);
+					if (zenputFieldAnno != null) {
+						try {
+							processor.registerField(field.getName(), zenputFieldAnno.title(), sourceObject);
+							registerValidators(processor, field);
+						} catch (ZenputException ze) {
+							log.error("Field " + field.getName() + " could not be registered", ze);
+						}
 					}
 				}
+				clazz = clazz.getSuperclass();
 			}
 		}
 	}
