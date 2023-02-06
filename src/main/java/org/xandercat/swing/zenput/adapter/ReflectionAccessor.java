@@ -40,7 +40,7 @@ public class ReflectionAccessor<I> implements InputAccessor<I> {
 		
 		String methodName = setterMethodName(inputFieldName);
 		Class<?> clazz = inputFieldClass;
-		while (this.inputSetter == null) {
+		while (this.inputSetter == null && clazz != null) {
 			try {
 				this.inputSetter = this.inputObject.getClass().getMethod(methodName, clazz);
 			} catch (NoSuchMethodException nsme) { }
