@@ -66,7 +66,7 @@ Of course, you probably have an input field for the user to enter the value with
 	CookieOrder cookieOrder = new CookieOrder();
 	JTextField quantityInputField = new JTextField();
 	SourceProcessor sourceProcessor = new SourceProcessor(cookieOrder);
-	InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_NONE, false);
+	InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_ALL, false);
 	inputProcessor.registerInput("quantity", quantityInputField);
 	... user enters value on text field and saves ...
 	processor.validate();
