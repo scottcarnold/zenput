@@ -1,4 +1,7 @@
 # Zenput
+
+DISCLAIMER: Zenput is a beta product at this time; some of it's functionality is being updated at this time and tests need to be written for it.
+
 Zenput is an input validation framework for Java Swing.  The primary construct of the Zenput framework is the Processor interface, and the InputProcessor and SourceProcessor classes that implement that interface.  The general validation flow is:
 
 Source Object --> Conversion --> Input Component
