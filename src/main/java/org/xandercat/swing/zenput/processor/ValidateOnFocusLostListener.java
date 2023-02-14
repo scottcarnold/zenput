@@ -28,7 +28,7 @@ public class ValidateOnFocusLostListener implements FocusListener {
 
 	@Override
 	public void focusGained(FocusEvent e) {
-		// TODO no action required
+		// no action required
 	}
 
 	@Override
