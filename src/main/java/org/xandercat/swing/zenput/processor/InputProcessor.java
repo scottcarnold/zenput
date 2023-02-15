@@ -185,6 +185,19 @@ public class InputProcessor implements Processor, ValueRetriever {
 	 * @return					marker for the mark target
 	 */
 	private <T> Marker<? super T> newMarker(T target) {
+		return newMarker(target, new ArrayList<MarkTargetProvider>());
+	}
+	
+	/**
+	 * Creates a new marker for the given mark target.  If there is no compatible marker builder
+	 * registered, null is returned.
+	 * 
+	 * @param <T>				target type
+	 * @param target			target to be marked
+	 * @param mtps              mark target provider chain; used to prevent potential infinite recursion
+	 * @return					marker for the mark target
+	 */
+	private <T> Marker<? super T> newMarker(T target, List<MarkTargetProvider> mtps) {
 		Class<?> c = target.getClass();
 		MarkerBuilder<? super T> markerBuilder = null;
 		while (markerBuilder == null && c != null) {
@@ -193,16 +206,18 @@ public class InputProcessor implements Processor, ValueRetriever {
 		}
 		if (markerBuilder == null) {
 			if (target instanceof MarkTargetProvider) {
+				for (MarkTargetProvider mtp : mtps) {
+					if (target == mtp) {
+						log.warn("Inifinite recursion of MarkTargetProvider detected; mark target already in processing will be ignored.");
+						return null;
+					}
+				}
+				mtps.add((MarkTargetProvider) target);
 				List<Marker<?>> markers = new ArrayList<Marker<?>>();
 				for (Object mtpTarget : ((MarkTargetProvider) target).getMarkTargets()) {
-					// TODO: While checking for self is good, more complex infinite recursions could still be constructed; consider ways to check for this
-					if (mtpTarget == target) { // avoid infinite recursion case
-						log.warn("MarkTargetProvider should NOT return itself in the array of mark targets and will be ignored.");
-					} else {
-						Marker<?> marker = newMarker(mtpTarget); // recursive marker creation
-						if (marker != null) {
-							markers.add(marker);
-						}
+					Marker<?> marker = newMarker(mtpTarget, mtps); // recursive marker creation
+					if (marker != null) {
+						markers.add(marker);
 					}
 				}
 				return (Marker<? super T>) new CompoundMarker(markers);
