@@ -80,6 +80,6 @@ Typically, you would also want to mark the input field in some way to the user t
 or
 
 	inputProcessor.registerInput("quantity", quantityInputField);
-	inputProcessor.setMarker("quantity", MarkerFactory.backgroundMarkerBuilder());
+	inputProcessor.setMarker("quantity", new BackgroundMarker());
 	
 The first approach will set a common marker for all input fields of the specified type, whereas the second approach will set the marker just for the specified field.  Setting a specific marker for a field will override any default marker that would otherwise apply.
