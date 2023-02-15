@@ -16,22 +16,13 @@ public class ForegroundMarker extends AbstractMarker<JComponent> {
 	private Color defaultColor;
 	private Color invalidColor;
 	
-	public ForegroundMarker() {
-		this(Marker.DEFAULT_INVALID_TEXT_COLOR);
+	public ForegroundMarker(JComponent component) {
+		this(component, Marker.DEFAULT_INVALID_TEXT_COLOR);
 	}
 	
-	public ForegroundMarker(Color invalidColor) {
-		super();
-		this.invalidColor = invalidColor;
-	}
-	
-	public ForegroundMarker(JComponent markTarget) {
-		this(markTarget, Marker.DEFAULT_INVALID_TEXT_COLOR);
-	}
-	
-	public ForegroundMarker(JComponent markTarget, Color invalidColor) {
-		super(markTarget);
-		this.defaultColor = markTarget.getForeground();	
+	public ForegroundMarker(JComponent component, Color invalidColor) {
+		super(component);
+		this.defaultColor = component.getForeground();
 		this.invalidColor = invalidColor;
 	}
 
@@ -43,10 +34,5 @@ public class ForegroundMarker extends AbstractMarker<JComponent> {
 	@Override
 	protected void markValid(JComponent inputComponent) {
 		inputComponent.setForeground(defaultColor);	
-	}
-
-	@Override
-	public Marker<JComponent> newMarker(JComponent markTarget) {
-		return new ForegroundMarker(markTarget, invalidColor);
 	}
 }

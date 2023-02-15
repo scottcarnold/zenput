@@ -1,7 +1,5 @@
 # Zenput
 
-DISCLAIMER: Zenput is a beta product at this time; some of it's functionality is being updated at this time and tests need to be written for it.
-
 Zenput is an input validation framework for Java Swing.  The primary construct of the Zenput framework is the Processor interface, and the InputProcessor and SourceProcessor classes that implement that interface.  The general validation flow is:
 
 Source Object --> Conversion --> Input Component
@@ -74,3 +72,14 @@ Of course, you probably have an input field for the user to enter the value with
 	... user enters value on text field and saves ...
 	processor.validate();
 	System.out.println("There are " + processor.getErrors().size() + " validation errors.");
+
+Typically, you would also want to mark the input field in some way to the user to indicate when the field value is invalid.  To do this, either set a default marker builder for the input field type or, after registering the input, set a specific marker for the input field.
+
+	inputProcessor.setDefaultMarkerBuilder(JTextField.class, MarkerFactory.backgroundMarkerBuilder());
+
+or
+
+	inputProcessor.registerInput("quantity", quantityInputField);
+	inputProcessor.setMarker("quantity", MarkerFactory.backgroundMarkerBuilder());
+	
+The first approach will set a common marker for all input fields of the specified type, whereas the second approach will set the marker just for the specified field.  Setting a specific marker for a field will override any default marker that would otherwise apply.

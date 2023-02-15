@@ -16,25 +16,16 @@ public class BackgroundMarker extends AbstractMarker<JComponent> {
 	private Color defaultColor;
 	private Color invalidColor;
 	
-	public BackgroundMarker() {
-		this(Marker.DEFAULT_INVALID_COLOR);
+	public BackgroundMarker(JComponent component) {
+		this(component, Marker.DEFAULT_INVALID_COLOR);
 	}
 	
-	public BackgroundMarker(Color invalidColor) {
-		super();
+	public BackgroundMarker(JComponent component, Color invalidColor) {
+		super(component);
+		this.defaultColor = component.getBackground();
 		this.invalidColor = invalidColor;
 	}
 	
-	public BackgroundMarker(JComponent markTarget) {
-		this(markTarget, Marker.DEFAULT_INVALID_COLOR);
-	}
-	
-	public BackgroundMarker(JComponent markTarget, Color invalidColor) {
-		super(markTarget);
-		this.invalidColor = invalidColor;
-		this.defaultColor = markTarget.getBackground();
-	}
-
 	@Override
 	protected void markInvalid(JComponent inputComponent, ValidationException error) {
 		inputComponent.setBackground(invalidColor);
@@ -44,11 +35,4 @@ public class BackgroundMarker extends AbstractMarker<JComponent> {
 	protected void markValid(JComponent inputComponent) {
 		inputComponent.setBackground(defaultColor);	
 	}
-
-	@Override
-	public Marker<JComponent> newMarker(JComponent markTarget) {
-		return new BackgroundMarker(markTarget, invalidColor);
-	}
-	
-	
 }

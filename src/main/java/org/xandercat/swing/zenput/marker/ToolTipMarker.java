@@ -19,15 +19,11 @@ public class ToolTipMarker extends AbstractMarker<JComponent> {
 	
 	private String defaultToolTip;
 	
-	public ToolTipMarker() {
-		super();
+	public ToolTipMarker(JComponent component) {
+		super(component);
+		this.defaultToolTip = component.getToolTipText();
 	}
-	
-	public ToolTipMarker(JComponent markTarget) {
-		super(markTarget);
-		this.defaultToolTip = markTarget.getToolTipText();
-	}
-	
+
 	@Override
 	protected void markInvalid(JComponent markTarget, ValidationException error) {
 		markTarget.setToolTipText(TT_BEGIN + error.getMessage() + TT_END);		
@@ -36,10 +32,5 @@ public class ToolTipMarker extends AbstractMarker<JComponent> {
 	@Override
 	protected void markValid(JComponent markTarget) {
 		markTarget.setToolTipText(defaultToolTip);	
-	}
-
-	@Override
-	public Marker<JComponent> newMarker(JComponent markTarget) {
-		return new ToolTipMarker(markTarget);
 	}
 }

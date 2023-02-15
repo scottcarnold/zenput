@@ -20,6 +20,7 @@ import org.xandercat.swing.zenput.converter.InputConverter;
 import org.xandercat.swing.zenput.converter.SameTypeConverter;
 import org.xandercat.swing.zenput.error.ValidationException;
 import org.xandercat.swing.zenput.error.ZenputException;
+import org.xandercat.swing.zenput.marker.CompoundMarker;
 import org.xandercat.swing.zenput.marker.MarkTargetProvider;
 import org.xandercat.swing.zenput.marker.Marker;
 import org.xandercat.swing.zenput.marker.MarkerBuilder;
@@ -54,7 +55,9 @@ public class InputProcessor implements Processor, ValueRetriever {
 	private static final Logger log = LogManager.getLogger(InputProcessor.class);
 	
 	protected final Map<String, InputAdapter<?, ?>> inputAdapters = new HashMap<String, InputAdapter<?, ?>>();
-	protected final Map<String, Marker<?>> inputMarkers = new HashMap<String, Marker<?>>();
+	protected final Map<String, Marker<?>> explicitMarkers = new HashMap<String, Marker<?>>();
+	protected final Map<String, Marker<?>> implicitMarkers = new HashMap<String, Marker<?>>();
+	private Map<Class<?>, MarkerBuilder<?>> markerBuilders = new HashMap<Class<?>, MarkerBuilder<?>>();	
 	protected final Map<String, ValidateOnFocusLostListener> validateOnFocusLostListeners = new HashMap<String, ValidateOnFocusLostListener>();
 	protected final MarkerFactory markerFactory = new MarkerFactory();
 	private Processor processor;
@@ -110,7 +113,7 @@ public class InputProcessor implements Processor, ValueRetriever {
 	public <I> void registerInput(String fieldName, InputAccessor<I> inputAccessor, InputConverter<I, ?> inputConverter) throws ZenputException {
 		InputAdapter inputAdapter = new InputAdapter(fieldName, inputAccessor, inputConverter);
 		inputAdapters.put(fieldName, inputAdapter);
-		inputMarkers.put(fieldName, markerFactory.newMarker(inputAccessor.getSource()));
+		implicitMarkers.put(fieldName, newMarker(inputAccessor.getSource()));
 		if (validateOnFocusLost) {
 			List<JComponent> components = new ArrayList<JComponent>();
 			if (inputAccessor.getSource() instanceof MarkTargetProvider) {
@@ -173,23 +176,83 @@ public class InputProcessor implements Processor, ValueRetriever {
 		processor.registerValidator(fieldName, validator);
 	}
 
+	/**
+	 * Creates a new marker for the given mark target.  If there is no compatible marker builder
+	 * registered, null is returned.
+	 * 
+	 * @param <T>				target type
+	 * @param target			target to be marked
+	 * @return					marker for the mark target
+	 */
+	private <T> Marker<? super T> newMarker(T target) {
+		Class<?> c = target.getClass();
+		MarkerBuilder<? super T> markerBuilder = null;
+		while (markerBuilder == null && c != null) {
+			markerBuilder = (MarkerBuilder<? super T>) markerBuilders.get(c);
+			c = c.getSuperclass();
+		}
+		if (markerBuilder == null) {
+			if (target instanceof MarkTargetProvider) {
+				List<Marker<?>> markers = new ArrayList<Marker<?>>();
+				for (Object mtpTarget : ((MarkTargetProvider) target).getMarkTargets()) {
+					// TODO: While checking for self is good, more complex infinite recursions could still be constructed; consider ways to check for this
+					if (mtpTarget == target) { // avoid infinite recursion case
+						log.warn("MarkTargetProvider should NOT return itself in the array of mark targets and will be ignored.");
+					} else {
+						Marker<?> marker = newMarker(mtpTarget); // recursive marker creation
+						if (marker != null) {
+							markers.add(marker);
+						}
+					}
+				}
+				return (Marker<? super T>) new CompoundMarker(markers);
+			} else {
+				return null;
+			}
+		} else {
+			return markerBuilder.newMarker(target);
+		}
+	}
+	
 	private void reinitializeInputMarkers() {
-		if (inputMarkers.size() > 0) {
-			for (String fieldName : inputMarkers.keySet()) {
+		if (implicitMarkers.size() > 0) {
+			for (String fieldName : implicitMarkers.keySet()) {
 				InputAdapter<?, ?> inputAdapter = this.inputAdapters.get(fieldName);
-				inputMarkers.put(fieldName, markerFactory.newMarker(inputAdapter.getSource()));
+				implicitMarkers.put(fieldName, newMarker(inputAdapter.getSource()));
 			}
 		}
 	}
 	
+	/**
+	 * Set a marker for a specific input by field name.  This will override any default markers.
+	 * No checking is done to ensure the marker is actually a marker for the specified field.
+	 * 
+	 * @param <T>
+	 * @param fieldName
+	 * @param marker
+	 */
+	public <T> void setMarker(String fieldName, Marker<T> marker) {
+		explicitMarkers.put(fieldName, marker);
+	}
+	
+	/**
+	 * Set default marker builder to be used to create markers for any input component of the given input class.
+	 * 
+	 * @param <T>
+	 * @param inputSourceClass
+	 * @param markerBuilder
+	 */
 	public <T> void setDefaultMarkerBuilder(Class<T> inputSourceClass, MarkerBuilder<? super T> markerBuilder) {
-		markerFactory.setMarkerBuilder(inputSourceClass, markerBuilder);
+		markerBuilders.put(inputSourceClass, markerBuilder);
 		reinitializeInputMarkers();
 	}
 	
 	private void mark(List<String> fieldNames) {
 		for (String fieldName : fieldNames) {
-			Marker<?> marker = this.inputMarkers.get(fieldName);
+			Marker<?> marker = this.explicitMarkers.get(fieldName);
+			if (marker == null) {
+				marker = this.implicitMarkers.get(fieldName);
+			}
 			if (marker != null) {
 				ValidationException ve = processor.getError(fieldName);
 				boolean valid = ve == null;
