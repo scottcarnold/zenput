@@ -163,7 +163,7 @@ public class InputProcessor implements Processor, ValueRetriever {
 	 * @param fieldName		field name
 	 * @param comboBox		combo box
 	 * @param enumClass		enum class
-	 * @throws ZenputException
+	 * @throws ZenputException if field cannot be registered
 	 */
 	public <T> void registerInput(String fieldName, JComboBox<T> comboBox, Class<T> enumClass) throws ZenputException {
 		InputAccessor<T> comboBoxAccessor = new ReflectionAccessor<T>(comboBox, "selectedItem", enumClass);
@@ -227,9 +227,9 @@ public class InputProcessor implements Processor, ValueRetriever {
 	 * Set a marker for a specific input by field name.  This will override any default markers.
 	 * No checking is done to ensure the marker is actually a marker for the specified field.
 	 * 
-	 * @param <T>
-	 * @param fieldName
-	 * @param marker
+	 * @param <T>         input field type to be marked
+	 * @param fieldName   name of field
+	 * @param marker      marker for input field
 	 */
 	public <T> void setMarker(String fieldName, Marker<T> marker) {
 		explicitMarkers.put(fieldName, marker);
@@ -238,9 +238,9 @@ public class InputProcessor implements Processor, ValueRetriever {
 	/**
 	 * Set default marker builder to be used to create markers for any input component of the given input class.
 	 * 
-	 * @param <T>
-	 * @param inputSourceClass
-	 * @param markerBuilder
+	 * @param <T>              input field type to be marked
+	 * @param inputSourceClass class of the input source
+	 * @param markerBuilder    builder that builds markers for the class of given source
 	 */
 	public <T> void setDefaultMarkerBuilder(Class<T> inputSourceClass, MarkerBuilder<? super T> markerBuilder) {
 		markerBuilders.put(inputSourceClass, markerBuilder);
@@ -318,13 +318,15 @@ public class InputProcessor implements Processor, ValueRetriever {
 	 * 
 	 * @param fieldName					name of field to commit
 	 * 
-	 * @throws ValidationException
-	 * @throws ZenputException
+	 * @throws ZenputException if program error occurs
+	 * @throws ValidationException if value cannot be committed due to validation error
 	 */
-	public void commit(String fieldName) throws ValidationException, ZenputException {
+	public void commit(String fieldName) throws ZenputException, ValidationException {
 		Object source = processor.getSource(fieldName);
 		try {
 			ReflectionUtil.invokeSetter(source, fieldName, getValueForField(fieldName));
+		} catch (ValidationException ve) {
+			throw ve;
 		} catch (Exception e) {
 			throw new ZenputException("Unable to commit value back to source for field " + fieldName, e);
 		}		
@@ -338,7 +340,7 @@ public class InputProcessor implements Processor, ValueRetriever {
 	 * If a ZenputException is thrown, a more serious error has occurred and commit of 
 	 * field values will terminate at the time the exception is thrown.
 	 * 
-	 * @throws ZenputException
+	 * @throws ZenputException if program error occurs
 	 */	
 	public void commit() throws ZenputException {
 		commit(processor.getRegisteredFieldNames());
@@ -354,7 +356,7 @@ public class InputProcessor implements Processor, ValueRetriever {
 	 * 
 	 * @param fieldNames			name of fields to commit
 	 * 
-	 * @throws ZenputException
+	 * @throws ZenputException if program error occurs
 	 */
 	public void commit(List<String> fieldNames) throws ZenputException {
 		for (String fieldName : fieldNames) {
@@ -400,6 +402,9 @@ public class InputProcessor implements Processor, ValueRetriever {
 		return (S) inputAdapter.getValue();
 	}
 
+	/**
+	 * Closes down the input processor, removing any focus lost listeners from input components.
+	 */
 	@Override
 	public void close() {
 		processor.close();

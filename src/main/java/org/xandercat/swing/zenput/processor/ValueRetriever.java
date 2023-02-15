@@ -21,8 +21,8 @@ public interface ValueRetriever {
 	 * 
 	 * @return				value of field
 	 * 
-	 * @throws ValidationException
-	 * @throws ZenputException
+	 * @throws ValidationException if a validation error occurs
+	 * @throws ZenputException if a program error occurs
 	 */
 	public <T> T getValueForField(String fieldName) throws ValidationException, ZenputException;
 }

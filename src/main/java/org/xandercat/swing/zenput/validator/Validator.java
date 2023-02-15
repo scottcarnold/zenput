@@ -30,7 +30,7 @@ public interface Validator<T> {
 	 * 
 	 * @return			whether or not the given value should be validated
 	 * 
-	 * @throws ValidationException
+	 * @throws ValidationException if validation error occurs
 	 */
 	public boolean shouldValidate(String fieldName, T value) throws ValidationException;
 	
@@ -41,7 +41,7 @@ public interface Validator<T> {
 	 * @param fieldName	name of field being validated
 	 * @param value		value to test
 	 * 
-	 * @throws ValidationException
+	 * @throws ValidationException if validation error occurs
 	 */
 	public void validate(String fieldName, T value) throws ValidationException;
 

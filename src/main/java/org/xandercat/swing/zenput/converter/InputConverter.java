@@ -24,7 +24,7 @@ public interface InputConverter<I, S> {
 	 * 
 	 * @return				source value
 	 * 
-	 * @throws ValidationException
+	 * @throws ValidationException if field cannot be converted
 	 */
 	public S convertInput(I inputValue, String fieldName) throws ValidationException;
 	
@@ -35,7 +35,7 @@ public interface InputConverter<I, S> {
 	 * 
 	 * @return				input value
 	 * 
-	 * @throws ZenputException
+	 * @throws ZenputException if field cannot be converted
 	 */
 	public I convertSource(S sourceValue) throws ZenputException;
 }

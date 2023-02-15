@@ -16,7 +16,7 @@ public interface Processor {
 	 * @param fieldTitle		title for field
 	 * @param source			source object that contains field
 	 * 
-	 * @throws ZenputException
+	 * @throws ZenputException if error occurs registering field
 	 */
 	public void registerField(String fieldName, String fieldTitle, Object source) throws ZenputException;
 	
@@ -28,7 +28,7 @@ public interface Processor {
 	 * @param fieldName			name of field
 	 * @param fieldTitle		title for field
 	 * 
-	 * @throws ZenputException
+	 * @throws ZenputException if error occurs registering field
 	 */
 	public void registerField(String fieldName, String fieldTitle) throws ZenputException;
 	
@@ -37,11 +37,11 @@ public interface Processor {
 	 * some default source object.  Implementing classes should provide some way of setting
 	 * a default source object which will be used when calls to this method are made.
 	 * 
-	 * @param fieldName
-	 * @param fieldTitle
-	 * @param validator
+	 * @param fieldName        name of field
+	 * @param fieldTitle       title of field
+	 * @param validator        validator for field
 	 * 
-	 * @throws ZenputException
+	 * @throws ZenputException if error occurs registering field
 	 */
 	public void registerField(String fieldName, String fieldTitle, Validator<?> validator) throws ZenputException;
 	
@@ -54,7 +54,7 @@ public interface Processor {
 	 * @param fieldName			name of field
 	 * @param validator			validator for field
 	 * 
-	 * @throws ZenputException
+	 * @throws ZenputException if error occurs registering validator
 	 */
 	public void registerValidator(String fieldName, Validator<?> validator) throws ZenputException;
 	
@@ -126,7 +126,7 @@ public interface Processor {
 	 * 
 	 * @return					whether or not all fields were valid
 	 * 
-	 * @throws ZenputException
+	 * @throws ZenputException if program error occurs
 	 */
 	public boolean validate() throws ZenputException;
 	
@@ -138,7 +138,7 @@ public interface Processor {
 	 * 
 	 * @return					whether or not the fields of given names were all valid
 	 * 
-	 * @throws ZenputException
+	 * @throws ZenputException if program error occurs
 	 */
 	public boolean validate(List<String> fieldNames) throws ZenputException;
 	
@@ -153,7 +153,7 @@ public interface Processor {
 	 * 
 	 * @return					actual fields in actual order that validation will occur in
 	 * 
-	 * @throws ZenputException
+	 * @throws ZenputException if program error occurs
 	 */
 	public List<String> getValidationOrder(List<String> fieldNames) throws ZenputException;
 	

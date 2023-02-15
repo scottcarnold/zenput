@@ -13,7 +13,7 @@ import org.xandercat.swing.zenput.error.ValidationException;
  * 
  * @author Scott Arnold
  *
- * @param <T>
+ * @param <T> the input component type to be marked
  */
 public class CompoundMarker<T> implements Marker<T> {
 	

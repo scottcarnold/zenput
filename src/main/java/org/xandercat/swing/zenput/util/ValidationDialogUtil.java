@@ -89,7 +89,7 @@ public class ValidationDialogUtil {
 	 * @param parent					parent frame
 	 * @param validationExceptions		validation exceptions
 	 * 
-	 * @returns		JOptionPane result code of OK_OPTION or CANCEL_OPTION
+	 * @return		JOptionPane result code of OK_OPTION or CANCEL_OPTION
 	 */
 	public static int showConfirmDialog(Frame parent, List<ValidationException> validationExceptions) {
 		String message = buildMessage(validationExceptions);

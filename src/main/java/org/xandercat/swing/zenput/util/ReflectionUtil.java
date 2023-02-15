@@ -45,7 +45,8 @@ public class ReflectionUtil {
 	 * 
 	 * @return						Field object, if found
 	 * 
-	 * @throws NoSuchFieldException, NoSuchMethodException
+	 * @throws NoSuchFieldException if reflection error occurs
+	 * @throws NoSuchMethodException if reflection error occurs
 	 */
 	public static Field verifyField(Object o, String fieldName, boolean verifyGetterAndSetter) 
 			throws NoSuchFieldException, NoSuchMethodException {
