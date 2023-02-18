@@ -13,15 +13,15 @@ import org.xandercat.swing.zenput.util.TypeUtil;
  *
  * @param <T>
  */
-public class FixedNotEqualsCondition<D, T> implements DependentCondition<D, T> {
+public class NotEqualsCondition<D, T> implements DependentCondition<D, T> {
 
 	private T compareToValue;
 
-	public static <D, T> FixedNotEqualsCondition<D, T> newCondition(ConditionNotEquals annotation) throws ParseException {
-		return new FixedNotEqualsCondition<D, T>((T) TypeUtil.parse(annotation.valueType(), annotation.stringValue()));
+	public static <D, T> NotEqualsCondition<D, T> newCondition(ConditionNotEquals annotation) throws ParseException {
+		return new NotEqualsCondition<D, T>((T) TypeUtil.parse(annotation.valueType(), annotation.stringValue()));
 	}
 	
-	public FixedNotEqualsCondition(T compareToValue) {
+	public NotEqualsCondition(T compareToValue) {
 		this.compareToValue = compareToValue;
 	}
 	
