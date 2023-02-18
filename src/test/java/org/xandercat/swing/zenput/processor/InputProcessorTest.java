@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.xandercat.swing.zenput.adapter.InputAccessor;
 import org.xandercat.swing.zenput.annotation.ConditionEquals;
-import org.xandercat.swing.zenput.annotation.ConditionFixedNotEquals;
+import org.xandercat.swing.zenput.annotation.ConditionNotEquals;
 import org.xandercat.swing.zenput.annotation.InputField;
 import org.xandercat.swing.zenput.annotation.ValidateConditional;
 import org.xandercat.swing.zenput.annotation.ValidateInteger;
@@ -40,7 +40,7 @@ public class InputProcessorTest {
 		private Integer quantity;
 		@InputField(title="Size")
 		@ValidateConditional(dependentOn="quantity")
-		@ConditionFixedNotEquals(valueType=Integer.class, stringValue="1")		
+		@ConditionNotEquals(valueType=Integer.class, stringValue="1")		
 		@ValidateRequired
 		private Size size;
 		public void setQuantity(Integer quantity) {

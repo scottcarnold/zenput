@@ -2,7 +2,7 @@ package org.xandercat.swing.zenput.condition;
 
 import java.text.ParseException;
 
-import org.xandercat.swing.zenput.annotation.ConditionFixedNotEquals;
+import org.xandercat.swing.zenput.annotation.ConditionNotEquals;
 import org.xandercat.swing.zenput.util.TypeUtil;
 
 /**
@@ -17,7 +17,7 @@ public class FixedNotEqualsCondition<D, T> implements DependentCondition<D, T> {
 
 	private T compareToValue;
 
-	public static <D, T> FixedNotEqualsCondition<D, T> newCondition(ConditionFixedNotEquals annotation) throws ParseException {
+	public static <D, T> FixedNotEqualsCondition<D, T> newCondition(ConditionNotEquals annotation) throws ParseException {
 		return new FixedNotEqualsCondition<D, T>((T) TypeUtil.parse(annotation.valueType(), annotation.stringValue()));
 	}
 	
