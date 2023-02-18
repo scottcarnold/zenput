@@ -2,14 +2,14 @@ package org.xandercat.swing.zenput.condition;
 
 import java.text.ParseException;
 
-import org.xandercat.swing.zenput.annotation.ConditionFixedEquals;
+import org.xandercat.swing.zenput.annotation.ConditionEquals;
 import org.xandercat.swing.zenput.util.TypeUtil;
 
 public class FixedEqualsCondition<D, T> implements DependentCondition<D, T> {
 	
 	private T compareToFixedValue;
 	
-	public static <D, T> FixedEqualsCondition<D, T> newCondition(ConditionFixedEquals annotation) throws ParseException {
+	public static <D, T> FixedEqualsCondition<D, T> newCondition(ConditionEquals annotation) throws ParseException {
 		if (annotation.valueType() != null && annotation.stringValue() == null) {
 			throw new IllegalArgumentException("If specifying valueType, stringValue must also be provided.");
 		}

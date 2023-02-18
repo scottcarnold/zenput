@@ -9,7 +9,7 @@ import org.xandercat.swing.zenput.condition.FixedEqualsCondition;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface ConditionFixedEquals {
+public @interface ConditionEquals {
 	Class<?> conditionClass() default FixedEqualsCondition.class; 
 	Class<?> valueType();
 	String stringValue();
