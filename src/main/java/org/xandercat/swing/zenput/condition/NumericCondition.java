@@ -2,9 +2,11 @@ package org.xandercat.swing.zenput.condition;
 
 public class NumericCondition implements DependentCondition<Number, Number> {
 
-	public static enum Operator { LT, LTEQ, EQ, GT, GTEQ }
-
 	private Operator operator;
+
+	public NumericCondition(Operator operator) {
+		this.operator = operator;
+	}
 	
 	@Override
 	public boolean isMet(Number fieldValue, Number conditionalValue) {
