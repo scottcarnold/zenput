@@ -11,10 +11,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xandercat.swing.zenput.annotation.InputField;
 import org.xandercat.swing.zenput.annotation.ValidateConditional;
+import org.xandercat.swing.zenput.condition.DependentCondition;
 import org.xandercat.swing.zenput.error.ZenputException;
 import org.xandercat.swing.zenput.validator.CompoundValidator;
 import org.xandercat.swing.zenput.validator.ConditionalValidator;
-import org.xandercat.swing.zenput.validator.DependentCondition;
 import org.xandercat.swing.zenput.validator.Validator;
 
 /**

@@ -3,6 +3,7 @@ package org.xandercat.swing.zenput.validator;
 import java.util.Collections;
 import java.util.List;
 
+import org.xandercat.swing.zenput.condition.DependentCondition;
 import org.xandercat.swing.zenput.error.ValidationException;
 import org.xandercat.swing.zenput.error.ZenputException;
 import org.xandercat.swing.zenput.processor.ValueRetriever;

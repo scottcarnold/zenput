@@ -1,4 +1,4 @@
-package org.xandercat.swing.zenput.validator;
+package org.xandercat.swing.zenput.condition;
 
 public class NumericCondition implements DependentCondition<Number, Number> {
 

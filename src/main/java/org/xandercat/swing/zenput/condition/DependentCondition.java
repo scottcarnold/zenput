@@ -1,4 +1,4 @@
-package org.xandercat.swing.zenput.validator;
+package org.xandercat.swing.zenput.condition;
 
 /**
  * A condition that is dependent upon some value.

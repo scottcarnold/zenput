@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.xandercat.swing.zenput.validator.FixedEqualsCondition;
+import org.xandercat.swing.zenput.condition.FixedEqualsCondition;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
