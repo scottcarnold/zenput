@@ -19,13 +19,13 @@ import org.xandercat.swing.zenput.processor.ValueRetriever;
  */
 public class ConditionalValidator<T, D> implements DependentValidator<T> {
 
-	private DependentCondition<D> condition;
+	private DependentCondition<T, D> condition;
 	private ValueRetriever valueRetriever;
 	private String dependencyFieldName;
 	private Validator<T> validator;
 	
 	public ConditionalValidator(String dependencyFieldName, 
-			DependentCondition<D> condition,
+			DependentCondition<T, D> condition,
 			Validator<T> validator) {
 		this.condition = condition;
 		this.dependencyFieldName = dependencyFieldName;
@@ -55,7 +55,7 @@ public class ConditionalValidator<T, D> implements DependentValidator<T> {
 		} catch (ZenputException e) {
 			throw new ValidationException(fieldName, "Unable to validate.", e);
 		}
-		return condition.isMet(dependencyValue) && validator.shouldValidate(fieldName, value);
+		return condition.isMet(value, dependencyValue) && validator.shouldValidate(fieldName, value);
 	}
 
 	@Override

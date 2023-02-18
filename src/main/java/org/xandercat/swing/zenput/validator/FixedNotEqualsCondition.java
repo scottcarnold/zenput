@@ -2,7 +2,7 @@ package org.xandercat.swing.zenput.validator;
 
 import java.text.ParseException;
 
-import org.xandercat.swing.zenput.annotation.ConditionNotEquals;
+import org.xandercat.swing.zenput.annotation.ConditionFixedNotEquals;
 import org.xandercat.swing.zenput.util.TypeUtil;
 
 /**
@@ -13,20 +13,20 @@ import org.xandercat.swing.zenput.util.TypeUtil;
  *
  * @param <T>
  */
-public class NotEqualsCondition<T> implements DependentCondition<T> {
+public class FixedNotEqualsCondition<D, T> implements DependentCondition<D, T> {
 
 	private T compareToValue;
 
-	public static NotEqualsCondition newCondition(ConditionNotEquals annotation) throws ParseException {
-		return new NotEqualsCondition(TypeUtil.parse(annotation.valueType(), annotation.stringValue()));
+	public static <D, T> FixedNotEqualsCondition<D, T> newCondition(ConditionFixedNotEquals annotation) throws ParseException {
+		return new FixedNotEqualsCondition<D, T>((T) TypeUtil.parse(annotation.valueType(), annotation.stringValue()));
 	}
 	
-	public NotEqualsCondition(T compareToValue) {
+	public FixedNotEqualsCondition(T compareToValue) {
 		this.compareToValue = compareToValue;
 	}
 	
 	@Override
-	public boolean isMet(T conditionalValue) {
+	public boolean isMet(D fieldValue, T conditionalValue) {
 		return compareToValue != conditionalValue
 				&& (compareToValue == null || !compareToValue.equals(conditionalValue));
 	}

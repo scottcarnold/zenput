@@ -3,7 +3,6 @@ package org.xandercat.swing.zenput.validator;
 import java.text.ParseException;
 
 import org.xandercat.swing.zenput.annotation.ConditionEquals;
-import org.xandercat.swing.zenput.util.TypeUtil;
 
 /**
  * A condition where the conditional value must be equal to some other fixed value.
@@ -13,21 +12,18 @@ import org.xandercat.swing.zenput.util.TypeUtil;
  *
  * @param <T>
  */
-public class EqualsCondition<T> implements DependentCondition<T> {
+public class EqualsCondition<T> implements DependentCondition<T, T> {
 
-	private T compareToValue;
-	
-	public static EqualsCondition newCondition(ConditionEquals annotation) throws ParseException {
-		return new EqualsCondition(TypeUtil.parse(annotation.valueType(), annotation.stringValue()));
+	public static <T> EqualsCondition<T> newCondition(ConditionEquals annotation) throws ParseException {
+		return new EqualsCondition<T>();
 	}
 	
-	public EqualsCondition(T compareToValue) {
-		this.compareToValue = compareToValue;
+	public EqualsCondition() {
 	}
 	
 	@Override
-	public boolean isMet(T conditionalValue) {
-		return compareToValue == conditionalValue
-				|| (compareToValue != null && compareToValue.equals(conditionalValue));
+	public boolean isMet(T fieldValue, T conditionalValue) {
+		return fieldValue == conditionalValue
+				|| (fieldValue != null && fieldValue.equals(conditionalValue));
 	}
 }

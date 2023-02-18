@@ -5,12 +5,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.xandercat.swing.zenput.validator.FixedNotEqualsCondition;
+import org.xandercat.swing.zenput.validator.FixedEqualsCondition;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface ConditionFixedNotEquals {
-	Class<?> conditionClass() default FixedNotEqualsCondition.class; 
+public @interface ConditionFixedEquals {
+	Class<?> conditionClass() default FixedEqualsCondition.class; 
 	Class<?> valueType();
 	String stringValue();
 }

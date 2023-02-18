@@ -11,6 +11,4 @@ import org.xandercat.swing.zenput.validator.EqualsCondition;
 @Target(ElementType.FIELD)
 public @interface ConditionEquals {
 	Class<?> conditionClass() default EqualsCondition.class; 
-	Class<?> valueType();
-	String stringValue();
 }
