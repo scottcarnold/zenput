@@ -5,11 +5,11 @@ import java.text.ParseException;
 import org.xandercat.swing.zenput.annotation.ConditionEquals;
 import org.xandercat.swing.zenput.util.TypeUtil;
 
-public class FixedEqualsCondition<D, T> implements DependentCondition<D, T> {
+public class EqualsCondition<D, T> implements DependentCondition<D, T> {
 	
 	private T compareToFixedValue;
 	
-	public static <D, T> FixedEqualsCondition<D, T> newCondition(ConditionEquals annotation) throws ParseException {
+	public static <D, T> EqualsCondition<D, T> newCondition(ConditionEquals annotation) throws ParseException {
 		if (annotation.valueType() != null && annotation.stringValue() == null) {
 			throw new IllegalArgumentException("If specifying valueType, stringValue must also be provided.");
 		}
@@ -17,16 +17,16 @@ public class FixedEqualsCondition<D, T> implements DependentCondition<D, T> {
 			throw new IllegalArgumentException("If specifying stringValue, valueType must also be provided.");
 		}
 		if (annotation.valueType() != null) {
-			return new FixedEqualsCondition<D, T>((T) TypeUtil.parse(annotation.valueType(), annotation.stringValue()));
+			return new EqualsCondition<D, T>((T) TypeUtil.parse(annotation.valueType(), annotation.stringValue()));
 		} else {
-			return new FixedEqualsCondition<D, T>();
+			return new EqualsCondition<D, T>();
 		}
 	}
 	
-	public FixedEqualsCondition() {
+	public EqualsCondition() {
 	}
 	
-	public FixedEqualsCondition(T compareToFixedValue) {
+	public EqualsCondition(T compareToFixedValue) {
 		this.compareToFixedValue = compareToFixedValue;
 	}
 	

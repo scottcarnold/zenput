@@ -5,12 +5,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.xandercat.swing.zenput.condition.FixedEqualsCondition;
+import org.xandercat.swing.zenput.condition.EqualsCondition;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ConditionEquals {
-	Class<?> conditionClass() default FixedEqualsCondition.class; 
+	Class<?> conditionClass() default EqualsCondition.class; 
 	Class<?> valueType();
 	String stringValue();
 }
