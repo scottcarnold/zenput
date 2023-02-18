@@ -6,18 +6,25 @@ import java.util.Map;
 
 public class ConverterFactory {
 
-	private static Map<Class<?>, InputConverter<String, ?>> stringConverters 
+	private static Map<Class<?>, InputConverter<String, ?>> converters 
 		= new HashMap<Class<?>, InputConverter<String, ?>>();
 	
 	static {
-		stringConverters.put(String.class, new SameTypeConverter<String>());
-		stringConverters.put(Integer.class, new IntegerConverter());
-		stringConverters.put(File.class, new FileConverter());
-		stringConverters.put(Boolean.class, new BooleanConverter());
-		stringConverters.put(Boolean.TYPE, new BooleanConverter());
+		converters.put(String.class, new SameTypeConverter<String>());
+		converters.put(Integer.class, new IntegerConverter());
+		converters.put(Integer.TYPE, new IntegerConverter());
+		converters.put(Long.class, new LongConverter());
+		converters.put(Long.TYPE, new LongConverter());
+		converters.put(Float.class, new FloatConverter());
+		converters.put(Float.TYPE, new FloatConverter());
+		converters.put(Double.class, new DoubleConverter());
+		converters.put(Double.TYPE, new DoubleConverter());
+		converters.put(File.class, new FileConverter());
+		converters.put(Boolean.class, new BooleanConverter());
+		converters.put(Boolean.TYPE, new BooleanConverter());
 	}
 	
 	public static InputConverter<String, ?> getConverterForType(Class<?> type) {
-		return stringConverters.get(type);
+		return converters.get(type);
 	}
 }

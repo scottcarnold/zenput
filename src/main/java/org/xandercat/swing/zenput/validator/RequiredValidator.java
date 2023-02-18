@@ -27,7 +27,7 @@ public class RequiredValidator extends AbstractValidator<Object> {
 
 	@Override
 	public boolean shouldValidate(String fieldName, Object value) throws ValidationException {
-		return true;
+		return true; // override AbstractValidator implementation
 	}
 
 	@Override

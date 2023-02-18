@@ -35,12 +35,6 @@ public class SourceProcessor implements Processor, ValueRetriever {
 	private ValueRetriever valueRetriever;
 	private boolean dependenciesBuilt = false;
 	
-	public static SourceProcessor newProcessor(Object... sourceObjects) {
-		SourceProcessor processor = new SourceProcessor(sourceObjects[0]);
-		
-		return processor;
-	}
-	
 	/**
 	 * Constructs a new SourceProcessor with the given default source object.
 	 * 

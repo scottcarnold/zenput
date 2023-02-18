@@ -1,5 +1,6 @@
 package org.xandercat.swing.zenput.validator;
 
+import org.xandercat.swing.zenput.annotation.ValidateLong;
 import org.xandercat.swing.zenput.error.ValidationException;
 
 /**
@@ -12,14 +13,22 @@ public class LongValidator extends AbstractValidator<Long> {
 	private long minValue = Long.MIN_VALUE;
 	private long maxValue = Long.MAX_VALUE;
 	
+	public static LongValidator newValidator(ValidateLong annotation) {
+		return new LongValidator(annotation.min(), annotation.max());
+	}
+	
 	public LongValidator() {
 		super();
 	}
 	
-	public LongValidator(long minValue, long maxValue) {
+	public LongValidator(Long minValue, Long maxValue) {
 		this();
-		this.minValue = minValue;
-		this.maxValue = maxValue;
+		if (minValue != null) {
+			this.minValue = minValue;
+		}
+		if (maxValue != null) {
+			this.maxValue = maxValue;
+		}
 	}
 	
 	@Override

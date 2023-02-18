@@ -111,7 +111,7 @@ public class AnnotationHandler {
 				validator = new CompoundValidator(fieldValidators.toArray(validatorArray));
 			}
 			if (validator == null) {
-				log.error("ValidateConditional annotation exists without an Validator annotations.");
+				log.error("ValidateConditional annotation exists without any Validator annotations.");
 			} else {
 				ConditionalValidator cv = new ConditionalValidator(cvAnno.dependentOn(), cvCondition, validator);
 				processor.registerValidator(field.getName(), cv);

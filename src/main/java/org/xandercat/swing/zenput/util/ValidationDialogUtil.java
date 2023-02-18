@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -23,15 +22,6 @@ import org.xandercat.swing.zenput.processor.InputProcessor;
  * @author Scott Arnold
  */
 public class ValidationDialogUtil {
-	
-	@Deprecated
-	private static String buildMessage(List<ValidationException> validationExceptions) {
-		StringBuilder message = new StringBuilder();
-		for (ValidationException ve : validationExceptions) {
-			message.append("\n" + ve.getFieldName() + ": " + ve.getMessage());
-		}
-		return message.toString();
-	}
 	
 	/**
 	 * Builds and returns a JTable of the provided validation exceptions.
@@ -81,19 +71,5 @@ public class ValidationDialogUtil {
 		scrollPane.setPreferredSize(new Dimension(450, 150));
 		panel.add(scrollPane, BorderLayout.CENTER);
 		JOptionPane.showMessageDialog(parent, panel, "Validation Errors", JOptionPane.ERROR_MESSAGE);
-	}
-	
-	/**
-	 * Show a basic validation error confirmation dialog.
-	 * 
-	 * @param parent					parent frame
-	 * @param validationExceptions		validation exceptions
-	 * 
-	 * @return		JOptionPane result code of OK_OPTION or CANCEL_OPTION
-	 */
-	public static int showConfirmDialog(Frame parent, List<ValidationException> validationExceptions) {
-		String message = buildMessage(validationExceptions);
-		message = message + "\n\nChoose OK to continue or CANCEL to make changes.";
-		return JOptionPane.showConfirmDialog(parent, message, "Validation Errors", JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
 	}
 }

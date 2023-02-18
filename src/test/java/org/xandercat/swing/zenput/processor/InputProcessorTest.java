@@ -3,34 +3,57 @@ package org.xandercat.swing.zenput.processor;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.awt.Color;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.xandercat.swing.zenput.adapter.InputAccessor;
+import org.xandercat.swing.zenput.annotation.ConditionEquals;
+import org.xandercat.swing.zenput.annotation.ConditionNotEquals;
 import org.xandercat.swing.zenput.annotation.InputField;
+import org.xandercat.swing.zenput.annotation.ValidateConditional;
 import org.xandercat.swing.zenput.annotation.ValidateInteger;
 import org.xandercat.swing.zenput.annotation.ValidateRequired;
 import org.xandercat.swing.zenput.converter.IntegerConverter;
+import org.xandercat.swing.zenput.error.ValidationException;
+import org.xandercat.swing.zenput.error.ZenputException;
 import org.xandercat.swing.zenput.marker.BackgroundMarker;
 import org.xandercat.swing.zenput.marker.MarkTargetProvider;
 import org.xandercat.swing.zenput.marker.MarkerFactory;
 
 public class InputProcessorTest {
 
+	public static enum Size { SMALL, LARGE }
+	
 	public static class Source {
 		@InputField(title="Quantity")
 		@ValidateRequired
 		@ValidateInteger(min=1,max=100)
 		private Integer quantity;
+		@InputField(title="Size")
+		@ValidateConditional(dependentOn="quantity")
+		@ConditionNotEquals(valueType=Integer.class, stringValue="1")		
+		@ValidateRequired
+		private Size size;
 		public void setQuantity(Integer quantity) {
 			this.quantity = quantity;
 		}
 		public Integer getQuantity() {
 			return quantity;
+		}
+		public void setSize(Size size) {
+			this.size = size;
+		}
+		public Size getSize() {
+			return size;
 		}
 	}
 	
@@ -52,23 +75,33 @@ public class InputProcessorTest {
 		}
 	}
 	
-	private JTextField inputField;
+	private JTextField quantityInputField;
+	private JComboBox<Size> sizeInputField;
 	private Source source;
 	private SourceProcessor sourceProcessor;
+	private InputProcessor inputProcessor;
 	
 	@BeforeEach
 	public void init() {
-		this.inputField = new JTextField();
+		this.quantityInputField = new JTextField();
+		this.sizeInputField = new JComboBox(Size.values());
 		this.source = new Source();
 		source.setQuantity(10);
-		this.sourceProcessor = new SourceProcessor(source);		
+		source.setSize(Size.SMALL);
+		this.sourceProcessor = new SourceProcessor(source);
+		this.inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_ALL, false);
+		try {
+			this.inputProcessor.registerInput("quantity", this.quantityInputField);
+			this.inputProcessor.registerInput("size", sizeInputField, Size.class);
+		} catch (ZenputException e) {}
 	}
 	
 	@Test
 	public void testCommitModeAll() throws Exception {
 		InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_ALL, false);
-		inputProcessor.registerInput("quantity", inputField);
-		inputField.setText("200");
+		inputProcessor.registerInput("quantity", quantityInputField);
+		inputProcessor.registerInput("size", sizeInputField, Size.class);
+		quantityInputField.setText("200");
 		boolean valid = inputProcessor.validate();
 		assertFalse(valid);
 		assertEquals(200, source.quantity);
@@ -77,12 +110,13 @@ public class InputProcessorTest {
 	@Test
 	public void testCommitModeValid() throws Exception {
 		InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_VALID, false);
-		inputProcessor.registerInput("quantity", inputField);
-		inputField.setText("200");
+		inputProcessor.registerInput("quantity", quantityInputField);
+		inputProcessor.registerInput("size", sizeInputField, Size.class);
+		quantityInputField.setText("200");
 		boolean valid = inputProcessor.validate();
 		assertFalse(valid);
 		assertEquals(10, source.quantity);
-		inputField.setText("80");
+		quantityInputField.setText("80");
 		valid = inputProcessor.validate();
 		assertTrue(valid);
 		assertEquals(80, source.quantity);
@@ -92,8 +126,9 @@ public class InputProcessorTest {
 	public void testCommitModeNone() throws Exception {
 		source.setQuantity(2);
 		InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_NONE, false);
-		inputProcessor.registerInput("quantity", inputField);
-		inputField.setText("50");
+		inputProcessor.registerInput("quantity", quantityInputField);
+		inputProcessor.registerInput("size", sizeInputField, Size.class);
+		quantityInputField.setText("50");
 		boolean valid = inputProcessor.validate();
 		assertTrue(valid);
 		assertEquals(2, source.quantity);
@@ -101,22 +136,18 @@ public class InputProcessorTest {
 	
 	@Test
 	public void testSetMarker() throws Exception {
-		InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_ALL, false);
-		inputProcessor.registerInput("quantity", inputField);
-		inputProcessor.setMarker("quantity", new BackgroundMarker(inputField, Color.CYAN));
-		inputField.setText("200");
+		inputProcessor.setMarker("quantity", new BackgroundMarker(quantityInputField, Color.CYAN));
+		quantityInputField.setText("200");
 		inputProcessor.validate();
-		assertEquals(Color.CYAN, inputField.getBackground());
+		assertEquals(Color.CYAN, quantityInputField.getBackground());
 	}
 	
 	@Test
 	public void testSetDefaultMarkerBuilder() throws Exception {
-		InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_ALL, false);
-		inputProcessor.registerInput("quantity", inputField);
 		inputProcessor.setDefaultMarkerBuilder(JTextField.class, MarkerFactory.backgroundMarkerBuilder(Color.CYAN));
-		inputField.setText("200");
+		quantityInputField.setText("200");
 		inputProcessor.validate();
-		assertEquals(Color.CYAN, inputField.getBackground());		
+		assertEquals(Color.CYAN, quantityInputField.getBackground());		
 	}
 	
 	@Test
@@ -140,6 +171,7 @@ public class InputProcessorTest {
 		};
 		inputProcessor.setDefaultMarkerBuilder(JTextField.class, MarkerFactory.backgroundMarkerBuilder(Color.ORANGE));
 		inputProcessor.registerInput("quantity", inputAccessor, new IntegerConverter());
+		inputProcessor.registerInput("size", sizeInputField, Size.class);
 		input.markTarget1.setText("not an integer");
 		boolean valid = inputProcessor.validate();
 		assertFalse(valid);
@@ -169,10 +201,59 @@ public class InputProcessorTest {
 		};
 		inputProcessor.setDefaultMarkerBuilder(JTextField.class, MarkerFactory.backgroundMarkerBuilder(Color.ORANGE));
 		inputProcessor.registerInput("quantity", inputAccessor, new IntegerConverter());
+		inputProcessor.registerInput("size", sizeInputField, Size.class);
 		input.markTarget1.setText("not an integer");
 		boolean valid = inputProcessor.validate();
 		assertFalse(valid);
 		assertEquals(Color.ORANGE, input.markTarget1.getBackground());
 		assertEquals(Color.ORANGE, input.markTarget2.getBackground());		
 	}
+	
+	@Test
+	public void testValidateOnFocusLost() throws Exception {
+		InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_VALID, true);
+		inputProcessor.registerInput("quantity", quantityInputField);
+		inputProcessor.registerInput("size", sizeInputField, Size.class);
+		assertTrue(inputProcessor.validate());
+		quantityInputField.setText("1000");
+		FocusListener[] listeners = quantityInputField.getFocusListeners();
+		assertTrue(listeners.length > 0);
+		for (FocusListener listener : listeners) {
+			listener.focusLost(new FocusEvent(quantityInputField, FocusEvent.FOCUS_LOST));
+		}
+		ValidationException ve = inputProcessor.getError("quantity");
+		assertNotNull(ve);
+		inputProcessor.close();
+		assertTrue(quantityInputField.getFocusListeners().length < listeners.length); // focus listener should have been removed on close
+	}
+	
+	@Test
+	public void testCommitList() throws Exception {
+		InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_NONE, false);
+		inputProcessor.registerInput("quantity", quantityInputField);
+		inputProcessor.registerInput("size", sizeInputField, Size.class);
+		source.setQuantity(2);
+		source.setSize(Size.SMALL);
+		quantityInputField.setText("50");
+		sizeInputField.setSelectedItem(Size.LARGE);
+		inputProcessor.validate();
+		assertEquals(2, source.quantity);
+		assertEquals(Size.SMALL, source.size);
+		inputProcessor.commit(Arrays.asList("quantity", "size"));
+		assertEquals(50, source.quantity);
+		assertEquals(Size.LARGE, source.size);
+	}
+	
+	@Test
+	public void testGetErrors() throws Exception {
+		quantityInputField.setText("200");
+		inputProcessor.validate();
+		List<ValidationException> errors = inputProcessor.getErrors(Arrays.asList("quantity", "size"));
+		assertNotNull(errors);
+		assertEquals(1, errors.size());
+		assertNotNull(errors.get(0));
+		assertEquals("quantity", errors.get(0).getFieldName());
+	}
+	
+
 }

@@ -12,13 +12,13 @@ public class StringValidator extends AbstractValidator<String> {
 	private String expression;		// regular expression
 	private String expressionName;	// user-friendly name of the expression
 	
-	public StringValidator() {
+	public StringValidator(String expression) {
 		super();
+		this.expression = expression;
 	}
 	
 	public StringValidator(String expression, String expressionName) {
-		this();
-		this.expression = expression;
+		this(expression);
 		this.expressionName = expressionName;
 	}
 	

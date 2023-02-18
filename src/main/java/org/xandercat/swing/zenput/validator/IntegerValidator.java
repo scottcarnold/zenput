@@ -14,18 +14,21 @@ public class IntegerValidator extends AbstractValidator<Integer> {
 	private int maxValue = Integer.MAX_VALUE;
 	
 	public static IntegerValidator newValidator(ValidateInteger annotation) {
-		IntegerValidator iv = new IntegerValidator(annotation.min(), annotation.max());
-		return iv;
+		return new IntegerValidator(annotation.min(), annotation.max());
 	}
 	
 	public IntegerValidator() {
 		super();
 	}
-	
-	public IntegerValidator(int minValue, int maxValue) {
+
+	public IntegerValidator(Integer minValue, Integer maxValue) {
 		this();
-		this.minValue = minValue;
-		this.maxValue = maxValue;
+		if (minValue != null) {
+			this.minValue = minValue;
+		}
+		if (maxValue != null) {
+			this.maxValue = maxValue;
+		}
 	}
 	
 	@Override
