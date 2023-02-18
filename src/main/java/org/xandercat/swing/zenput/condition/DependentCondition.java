@@ -18,4 +18,12 @@ public interface DependentCondition<D, T> {
 	 * @return		true if condition is met for the value
 	 */
 	public boolean isMet(D fieldValue, T conditionalValue);
+	
+	/**
+	 * Returns a description of this condition.
+	 * 
+	 * @param conditionalValueFieldName field name for the field that contains the conditional value
+	 * @return description of this condition
+	 */
+	public String getDescription(String conditionalValueFieldName);
 }

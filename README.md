@@ -14,6 +14,8 @@ The processor can then be wrapped by an InputProcessor, which provides the means
 
 Once a processor is constructed, validate methods can be called to validate some or all fields.  After validate is called, getError methods can be called to retrieve any validation errors.  The InputProcessor provides additional options on how validation operates and when data from the input compoonents gets committed back to the source object.  You can also set how to change the appearance of invalid user inputs with the setDefaultMarkerBuilder method.  Zenput provides a small collection of markers that can be used to style common Swing input components.
 
+## Basic Validation
+
 Putting it all into an example, assume you have a Source Class as follows:
 
 	public class CookieOrder {
@@ -73,6 +75,8 @@ Of course, you probably have an input field for the user to enter the value with
 	processor.validate();
 	System.out.println("There are " + processor.getErrors().size() + " validation errors.");
 
+## Markers
+
 Typically, you would also want to mark the input field in some way to the user to indicate when the field value is invalid.  To do this, either set a default marker builder for the input field type or, after registering the input, set a specific marker for the input field.
 
 	inputProcessor.setDefaultMarkerBuilder(JTextField.class, MarkerFactory.backgroundMarkerBuilder());
@@ -83,3 +87,7 @@ or
 	inputProcessor.setMarker("quantity", new BackgroundMarker());
 	
 The first approach will set a common marker for all input fields of the specified type, whereas the second approach will set the marker just for the specified field.  Setting a specific marker for a field will override any default marker that would otherwise apply.
+
+## Conditional Validation
+
+Input fields can also have their validation dependent on various conditions.  

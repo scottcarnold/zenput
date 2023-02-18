@@ -40,4 +40,13 @@ public class EqualsCondition<D, T> implements DependentCondition<D, T> {
 					|| (compareToFixedValue != null && compareToFixedValue.equals(conditionalValue));
 		}
 	}
+
+	@Override
+	public String getDescription(String conditionalValueFieldName) {
+		if (compareToFixedValue == null) {
+			return "Must be equal to value in field " + conditionalValueFieldName;
+		} else {
+			return "Field " + conditionalValueFieldName + " must have a value of " + compareToFixedValue.toString();
+		}
+	}
 }
