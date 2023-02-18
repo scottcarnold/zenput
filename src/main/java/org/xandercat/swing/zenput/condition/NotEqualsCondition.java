@@ -18,7 +18,20 @@ public class NotEqualsCondition<D, T> implements DependentCondition<D, T> {
 	private T compareToValue;
 
 	public static <D, T> NotEqualsCondition<D, T> newCondition(ConditionNotEquals annotation) throws ParseException {
-		return new NotEqualsCondition<D, T>((T) TypeUtil.parse(annotation.valueType(), annotation.stringValue()));
+		if (annotation.valueType() != null && annotation.stringValue() == null) {
+			throw new IllegalArgumentException("If specifying valueType, stringValue must also be provided.");
+		}
+		if (annotation.valueType() == null && annotation.stringValue() != null) {
+			throw new IllegalArgumentException("If specifying stringValue, valueType must also be provided.");
+		}
+		if (annotation.valueType() != null) {
+			return new NotEqualsCondition<D, T>((T) TypeUtil.parse(annotation.valueType(), annotation.stringValue()));
+		} else {
+			return new NotEqualsCondition<D, T>();
+		}
+	}
+	
+	public NotEqualsCondition() {
 	}
 	
 	public NotEqualsCondition(T compareToValue) {
@@ -27,7 +40,12 @@ public class NotEqualsCondition<D, T> implements DependentCondition<D, T> {
 	
 	@Override
 	public boolean isMet(D fieldValue, T conditionalValue) {
-		return compareToValue != conditionalValue
-				&& (compareToValue == null || !compareToValue.equals(conditionalValue));
+		if (compareToValue == null) {
+			return fieldValue != conditionalValue
+					&& (fieldValue == null || !fieldValue.equals(conditionalValue));
+		} else {
+			return compareToValue != conditionalValue
+					&& (compareToValue == null || !compareToValue.equals(conditionalValue));
+		}
 	}
 }
