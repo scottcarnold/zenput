@@ -14,6 +14,7 @@ public @interface ControlNumeric {
 	String dependencyOn();
 	Class<?> conditionClass() default NumericCondition.class; 
 	Operator operator();
-	Class<?> valueType();
-	String stringValue();
+	CompareTo compareTo() default CompareTo.FIXED_VALUE;
+	Class<?> valueType() default Object.class;
+	String stringValue() default "";
 }

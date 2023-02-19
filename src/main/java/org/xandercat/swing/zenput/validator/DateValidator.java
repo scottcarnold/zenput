@@ -58,21 +58,17 @@ public class DateValidator extends AbstractValidator<Date> {
 	@Override
 	public void validate(String fieldName, Date value) throws ValidationException {
 		if (after != null) {
-			if (afterInclusive) {
-				if (value.before(after)) {
-					throw new ValidationException(fieldName, "Value must be on or after " + dateFormat.format(after));
-				} else if (!value.after(after)) {
-					throw new ValidationException(fieldName, "Value must be after " + dateFormat.format(after));
-				}
+			if (afterInclusive && value.before(after)) {
+				throw new ValidationException(fieldName, "Value must be on or after " + dateFormat.format(after));
+			} else if (!afterInclusive && !value.after(after)) {
+				throw new ValidationException(fieldName, "Value must be after " + dateFormat.format(after));
 			}
 		}
 		if (before != null) {
-			if (beforeInclusive) {
-				if (value.after(before)) {
-					throw new ValidationException(fieldName, "Value must be on or before " + dateFormat.format(before));
-				} else if (!value.before(before)) {
-					throw new ValidationException(fieldName, "Value must be before " + dateFormat.format(before));
-				}
+			if (beforeInclusive && value.after(before)) {
+				throw new ValidationException(fieldName, "Value must be on or before " + dateFormat.format(before));
+			} else if (!beforeInclusive && !value.before(before)) {
+				throw new ValidationException(fieldName, "Value must be before " + dateFormat.format(before));
 			}
 		}
 	}

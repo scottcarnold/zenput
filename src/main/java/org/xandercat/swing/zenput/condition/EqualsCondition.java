@@ -2,6 +2,7 @@ package org.xandercat.swing.zenput.condition;
 
 import java.text.ParseException;
 
+import org.xandercat.swing.zenput.annotation.CompareTo;
 import org.xandercat.swing.zenput.annotation.ControlEquals;
 import org.xandercat.swing.zenput.annotation.ValidateDependencyEquals;
 import org.xandercat.swing.zenput.util.TypeUtil;
@@ -12,21 +13,15 @@ public class EqualsCondition<D, T> implements DependentCondition<D, T> {
 	private T compareToFixedValue;
 	
 	public static <D, T> EqualsCondition<D, T> newCondition(ControlEquals annotation) throws ParseException {
-		return newCondition(annotation.dependencyOn(), annotation.valueType(), annotation.stringValue());
+		return newCondition(annotation.dependencyOn(), annotation.compareTo(), annotation.valueType(), annotation.stringValue());
 	}
 	
 	public static <D, T> EqualsCondition<D, T> newCondition(ValidateDependencyEquals annotation) throws ParseException {
-		return newCondition(annotation.dependencyOn(), annotation.valueType(), annotation.stringValue());
+		return newCondition(annotation.dependencyOn(), annotation.compareTo(), annotation.valueType(), annotation.stringValue());
 	}
 	
-	private static <D, T> EqualsCondition<D, T> newCondition(String dependencyFieldName, Class<?> valueType, String stringValue) throws ParseException {
-		if (valueType != null && stringValue == null) {
-			throw new IllegalArgumentException("If specifying valueType, stringValue must also be provided.");
-		}
-		if (valueType == null && stringValue != null) {
-			throw new IllegalArgumentException("If specifying stringValue, valueType must also be provided.");
-		}
-		if (valueType != null) {
+	private static <D, T> EqualsCondition<D, T> newCondition(String dependencyFieldName, CompareTo compareTo, Class<?> valueType, String stringValue) throws ParseException {
+		if (compareTo == CompareTo.FIXED_VALUE) {
 			return new EqualsCondition<D, T>(dependencyFieldName, (T) TypeUtil.parse(valueType, stringValue));
 		} else {
 			return new EqualsCondition<D, T>(dependencyFieldName);

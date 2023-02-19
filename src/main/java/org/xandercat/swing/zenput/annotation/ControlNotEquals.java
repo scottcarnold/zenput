@@ -11,7 +11,8 @@ import org.xandercat.swing.zenput.condition.NotEqualsCondition;
 @Target(ElementType.FIELD)
 public @interface ControlNotEquals {
 	String dependencyOn();
-	Class<?> conditionClass() default NotEqualsCondition.class; 
-	Class<?> valueType();
-	String stringValue();
+	Class<?> conditionClass() default NotEqualsCondition.class;
+	CompareTo compareTo() default CompareTo.FIXED_VALUE;
+	Class<?> valueType() default Object.class;
+	String stringValue() default "";
 }

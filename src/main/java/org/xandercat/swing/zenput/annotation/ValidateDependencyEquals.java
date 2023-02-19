@@ -11,7 +11,8 @@ import org.xandercat.swing.zenput.condition.EqualsCondition;
 @Target(ElementType.FIELD)
 public @interface ValidateDependencyEquals {
 	String dependencyOn();
-	Class<?> conditionClass() default EqualsCondition.class; 
-	Class<?> valueType();
-	String stringValue();
+	Class<?> conditionClass() default EqualsCondition.class;
+	CompareTo compareTo() default CompareTo.FIELD;
+	Class<?> valueType() default Object.class;
+	String stringValue() default "";
 }

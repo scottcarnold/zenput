@@ -18,8 +18,10 @@ import org.junit.jupiter.api.Timeout;
 import org.xandercat.swing.zenput.adapter.InputAccessor;
 import org.xandercat.swing.zenput.annotation.ControlNotEquals;
 import org.xandercat.swing.zenput.annotation.InputField;
+import org.xandercat.swing.zenput.annotation.ValidateDependencyNumeric;
 import org.xandercat.swing.zenput.annotation.ValidateInteger;
 import org.xandercat.swing.zenput.annotation.ValidateRequired;
+import org.xandercat.swing.zenput.condition.Operator;
 import org.xandercat.swing.zenput.converter.IntegerConverter;
 import org.xandercat.swing.zenput.error.ValidationException;
 import org.xandercat.swing.zenput.error.ZenputException;
@@ -40,6 +42,16 @@ public class InputProcessorTest {
 		@ControlNotEquals(dependencyOn="quantity", valueType=Integer.class, stringValue="1")
 		@ValidateRequired
 		private Size size;
+		@InputField(title="Dependent On Quantity")
+		@ValidateDependencyNumeric(dependencyOn="quantity", operator=Operator.LT)
+		private Integer lessThanQuantity;
+		
+		public Integer getLessThanQuantity() {
+			return lessThanQuantity;
+		}
+		public void setLessThanQuantity(Integer lessThanQuantity) {
+			this.lessThanQuantity = lessThanQuantity;
+		}
 		public void setQuantity(Integer quantity) {
 			this.quantity = quantity;
 		}
@@ -73,6 +85,7 @@ public class InputProcessorTest {
 	}
 	
 	private JTextField quantityInputField;
+	private JTextField lessThanQuantityInputField;
 	private JComboBox<Size> sizeInputField;
 	private Source source;
 	private SourceProcessor sourceProcessor;
@@ -82,14 +95,17 @@ public class InputProcessorTest {
 	public void init() {
 		this.quantityInputField = new JTextField();
 		this.sizeInputField = new JComboBox(Size.values());
+		this.lessThanQuantityInputField = new JTextField();
 		this.source = new Source();
 		source.setQuantity(10);
 		source.setSize(Size.SMALL);
+		source.setLessThanQuantity(0);
 		this.sourceProcessor = new SourceProcessor(source);
 		this.inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_ALL, false);
 		try {
 			this.inputProcessor.registerInput("quantity", this.quantityInputField);
 			this.inputProcessor.registerInput("size", sizeInputField, Size.class);
+			this.inputProcessor.registerInput("lessThanQuantity", this.lessThanQuantityInputField);
 		} catch (ZenputException e) {}
 	}
 	
@@ -98,6 +114,7 @@ public class InputProcessorTest {
 		InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_ALL, false);
 		inputProcessor.registerInput("quantity", quantityInputField);
 		inputProcessor.registerInput("size", sizeInputField, Size.class);
+		inputProcessor.registerInput("lessThanQuantity", this.lessThanQuantityInputField);
 		quantityInputField.setText("200");
 		boolean valid = inputProcessor.validate();
 		assertFalse(valid);
@@ -109,6 +126,7 @@ public class InputProcessorTest {
 		InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_VALID, false);
 		inputProcessor.registerInput("quantity", quantityInputField);
 		inputProcessor.registerInput("size", sizeInputField, Size.class);
+		inputProcessor.registerInput("lessThanQuantity", this.lessThanQuantityInputField);
 		quantityInputField.setText("200");
 		boolean valid = inputProcessor.validate();
 		assertFalse(valid);
@@ -125,6 +143,7 @@ public class InputProcessorTest {
 		InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_NONE, false);
 		inputProcessor.registerInput("quantity", quantityInputField);
 		inputProcessor.registerInput("size", sizeInputField, Size.class);
+		inputProcessor.registerInput("lessThanQuantity", this.lessThanQuantityInputField);
 		quantityInputField.setText("50");
 		boolean valid = inputProcessor.validate();
 		assertTrue(valid);
@@ -169,6 +188,7 @@ public class InputProcessorTest {
 		inputProcessor.setDefaultMarkerBuilder(JTextField.class, MarkerFactory.backgroundMarkerBuilder(Color.ORANGE));
 		inputProcessor.registerInput("quantity", inputAccessor, new IntegerConverter());
 		inputProcessor.registerInput("size", sizeInputField, Size.class);
+		inputProcessor.registerInput("lessThanQuantity", this.lessThanQuantityInputField);
 		input.markTarget1.setText("not an integer");
 		boolean valid = inputProcessor.validate();
 		assertFalse(valid);
@@ -199,6 +219,7 @@ public class InputProcessorTest {
 		inputProcessor.setDefaultMarkerBuilder(JTextField.class, MarkerFactory.backgroundMarkerBuilder(Color.ORANGE));
 		inputProcessor.registerInput("quantity", inputAccessor, new IntegerConverter());
 		inputProcessor.registerInput("size", sizeInputField, Size.class);
+		inputProcessor.registerInput("lessThanQuantity", this.lessThanQuantityInputField);
 		input.markTarget1.setText("not an integer");
 		boolean valid = inputProcessor.validate();
 		assertFalse(valid);
@@ -211,6 +232,7 @@ public class InputProcessorTest {
 		InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_VALID, true);
 		inputProcessor.registerInput("quantity", quantityInputField);
 		inputProcessor.registerInput("size", sizeInputField, Size.class);
+		inputProcessor.registerInput("lessThanQuantity", this.lessThanQuantityInputField);
 		assertTrue(inputProcessor.validate());
 		quantityInputField.setText("1000");
 		FocusListener[] listeners = quantityInputField.getFocusListeners();
@@ -229,6 +251,7 @@ public class InputProcessorTest {
 		InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_NONE, false);
 		inputProcessor.registerInput("quantity", quantityInputField);
 		inputProcessor.registerInput("size", sizeInputField, Size.class);
+		inputProcessor.registerInput("lessThanQuantity", this.lessThanQuantityInputField);
 		source.setQuantity(2);
 		source.setSize(Size.SMALL);
 		quantityInputField.setText("50");
@@ -239,6 +262,17 @@ public class InputProcessorTest {
 		inputProcessor.commit(Arrays.asList("quantity", "size"));
 		assertEquals(50, source.quantity);
 		assertEquals(Size.LARGE, source.size);
+	}
+	
+	@Test
+	public void testDependencyValidation() throws Exception {
+		quantityInputField.setText("20");
+		lessThanQuantityInputField.setText("22");
+		assertFalse(inputProcessor.validate());
+		ValidationException ve = inputProcessor.getError("lessThanQuantity");
+		assertNotNull(ve);
+		lessThanQuantityInputField.setText("19");
+		assertTrue(inputProcessor.validate());
 	}
 	
 	@Test

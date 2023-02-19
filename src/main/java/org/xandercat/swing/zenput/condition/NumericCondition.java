@@ -2,6 +2,7 @@ package org.xandercat.swing.zenput.condition;
 
 import java.text.ParseException;
 
+import org.xandercat.swing.zenput.annotation.CompareTo;
 import org.xandercat.swing.zenput.annotation.ControlNumeric;
 import org.xandercat.swing.zenput.annotation.ValidateDependencyNumeric;
 import org.xandercat.swing.zenput.util.TypeUtil;
@@ -13,24 +14,15 @@ public class NumericCondition implements DependentCondition<Number, Number> {
 	private String dependencyFieldName;
 	
 	public static NumericCondition newCondition(ControlNumeric annotation) throws ParseException {
-		return newCondition(annotation.dependencyOn(), annotation.operator(), annotation.valueType(), annotation.stringValue());
+		return newCondition(annotation.dependencyOn(), annotation.operator(), annotation.compareTo(), annotation.valueType(), annotation.stringValue());
 	}
 	
 	public static NumericCondition newCondition(ValidateDependencyNumeric annotation) throws ParseException {
-		return newCondition(annotation.dependencyOn(), annotation.operator(), annotation.valueType(), annotation.stringValue());
+		return newCondition(annotation.dependencyOn(), annotation.operator(), annotation.compareTo(), annotation.valueType(), annotation.stringValue());
 	}
 	
-	private static NumericCondition newCondition(String dependencyFieldName, Operator operator, Class<?> valueType, String stringValue) throws ParseException {
-		if (operator == null) {
-			throw new IllegalArgumentException("operator value is required.");
-		}
-		if (valueType != null && stringValue == null) {
-			throw new IllegalArgumentException("If specifying valueType, stringValue must also be provided.");
-		}
-		if (valueType == null && stringValue != null) {
-			throw new IllegalArgumentException("If specifying stringValue, valueType must also be provided.");
-		}
-		if (valueType != null) {
+	private static NumericCondition newCondition(String dependencyFieldName, Operator operator, CompareTo compareTo, Class<?> valueType, String stringValue) throws ParseException {
+		if (compareTo == CompareTo.FIXED_VALUE) {
 			return new NumericCondition(dependencyFieldName, operator, (Number) TypeUtil.parse(valueType, stringValue));
 		} else {
 			return new NumericCondition(dependencyFieldName, operator);
@@ -38,6 +30,9 @@ public class NumericCondition implements DependentCondition<Number, Number> {
 	}
 	
 	public NumericCondition(String dependencyFieldName, Operator operator) {
+		if (operator == null) {
+			throw new IllegalArgumentException("operator value is required.");
+		}
 		this.operator = operator;
 		this.dependencyFieldName = dependencyFieldName;
 	}
