@@ -26,6 +26,7 @@ import org.xandercat.swing.zenput.marker.Marker;
 import org.xandercat.swing.zenput.marker.MarkerBuilder;
 import org.xandercat.swing.zenput.marker.MarkerFactory;
 import org.xandercat.swing.zenput.util.ReflectionUtil;
+import org.xandercat.swing.zenput.validator.Control;
 import org.xandercat.swing.zenput.validator.Validator;
 
 /**
@@ -108,6 +109,11 @@ public class InputProcessor implements Processor, ValueRetriever {
 	@Override
 	public void registerField(String fieldName, String fieldTitle, Validator<?> validator) throws ZenputException {
 		processor.registerField(fieldName, fieldTitle, validator);
+	}
+
+	@Override
+	public void registerControl(String fieldName, Control<?> control) throws ZenputException {
+		processor.registerControl(fieldName, control);
 	}
 
 	public <I> void registerInput(String fieldName, InputAccessor<I> inputAccessor, InputConverter<I, ?> inputConverter) throws ZenputException {

@@ -11,6 +11,8 @@ import org.xandercat.swing.zenput.util.DependencyChain;
 import org.xandercat.swing.zenput.util.ReflectionUtil;
 import org.xandercat.swing.zenput.error.ValidationException;
 import org.xandercat.swing.zenput.error.ZenputException;
+import org.xandercat.swing.zenput.validator.Control;
+import org.xandercat.swing.zenput.validator.DependencyControl;
 import org.xandercat.swing.zenput.validator.DependencyValidator;
 import org.xandercat.swing.zenput.validator.Validator;
 
@@ -29,6 +31,7 @@ public class SourceProcessor implements Processor, ValueRetriever {
 	protected final List<Object> sources = new ArrayList<Object>();
 	protected final List<ValidationException> errors = new ArrayList<ValidationException>();
 	protected final List<List<Validator<?>>> validators = new ArrayList<List<Validator<?>>>();
+	protected final List<List<Control<?>>> controls = new ArrayList<List<Control<?>>>();
 	protected final List<List<String>> dependencies = new ArrayList<List<String>>();
 	protected final Object defaultSource;
 	private final DependencyChain<String> dependencyChain = new DependencyChain<String>();
@@ -105,6 +108,7 @@ public class SourceProcessor implements Processor, ValueRetriever {
 		this.errors.add(null);
 		this.dependencies.add(null);
 		this.validators.add(new ArrayList<Validator<?>>());
+		this.controls.add(new ArrayList<Control<?>>());
 	}
 
 	@Override
@@ -131,6 +135,19 @@ public class SourceProcessor implements Processor, ValueRetriever {
 			this.dependenciesBuilt = false;	// will force dependencies to be reconstructed on next validate
 			this.dependencyChain.add(fieldName, dependentValidator.getDependencyFieldNames());
 		}
+	}
+	
+	@Override
+	public void registerControl(String fieldName, Control<?> control) throws ZenputException {
+		if (!control.getValueType().isAssignableFrom(getRegisteredFieldType(fieldName))) {
+			throw new ZenputException("Control for type " + control.getValueType().getName() + " is not class compatible with field " + fieldName + " of type " + getRegisteredFieldType(fieldName));
+		}
+		List<Control<?>> controls = this.controls.get(this.fieldOrder.get(fieldName));
+		controls.add(control);
+		if (control instanceof DependencyControl) {
+			DependencyControl<?> dependencyControl = (DependencyControl<?>) control;
+			dependencyControl.setValueRetriever(this.valueRetriever);
+		}	
 	}
 
 	private void checkFieldsRegistered(List<String> fieldNames) throws ZenputException {
@@ -198,6 +215,18 @@ public class SourceProcessor implements Processor, ValueRetriever {
 	private <T> boolean validate(String fieldName) throws ZenputException {
 		int idx = checkFieldRegistered(fieldName);
 		this.errors.set(idx, null);
+		List<Control<?>> controls = this.controls.get(idx);
+		for (Control<?> control : controls) {
+			Control<? super T> typedControl = (Control<? super T>) control;
+			try {
+				if (!typedControl.shouldValidate(fieldName)) {
+					return true;
+				}
+			} catch (ValidationException ve) {
+				this.errors.set(idx, ve);
+				return false;
+			}
+		}
 		T fieldValue = null;
 		try {
 			fieldValue = (T) this.valueRetriever.getValueForField(fieldName);

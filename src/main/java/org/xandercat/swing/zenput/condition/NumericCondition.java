@@ -37,6 +37,11 @@ public class NumericCondition implements DependentCondition<Number, Number> {
 	}
 	
 	@Override
+	public boolean requiresFieldValue() {
+		return compareToFixedValue == null;
+	}
+	
+	@Override
 	public boolean isMet(Number fieldValue, Number conditionalValue) {
 		Number number1 = null, number2 = null;
 		if (compareToFixedValue == null) {

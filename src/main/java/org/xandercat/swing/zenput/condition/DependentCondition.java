@@ -23,7 +23,16 @@ public interface DependentCondition<D, T> {
 	 * Returns a description of this condition.
 	 * 
 	 * @param conditionalValueFieldName field name for the field that contains the conditional value
+	 * 
 	 * @return description of this condition
 	 */
 	public String getDescription(String conditionalValueFieldName);
+	
+	/**
+	 * Returns whether or not the dependency test will require the value of the field
+	 * the condition is for.
+	 * 
+	 * @return whether or not the dependency test will require the value of the field the condition is for.
+	 */
+	public boolean requiresFieldValue();
 }

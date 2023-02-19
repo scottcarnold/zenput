@@ -39,6 +39,11 @@ public class NotEqualsCondition<D, T> implements DependentCondition<D, T> {
 	}
 	
 	@Override
+	public boolean requiresFieldValue() {
+		return compareToValue == null;
+	}
+	
+	@Override
 	public boolean isMet(D fieldValue, T conditionalValue) {
 		if (compareToValue == null) {
 			return fieldValue != conditionalValue

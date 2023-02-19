@@ -31,6 +31,11 @@ public class EqualsCondition<D, T> implements DependentCondition<D, T> {
 	}
 	
 	@Override
+	public boolean requiresFieldValue() {
+		return compareToFixedValue == null;
+	}
+
+	@Override
 	public boolean isMet(D fieldValue, T conditionalValue) {
 		if (compareToFixedValue == null) {
 			return fieldValue == conditionalValue

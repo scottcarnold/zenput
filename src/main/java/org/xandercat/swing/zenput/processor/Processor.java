@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.xandercat.swing.zenput.error.ValidationException;
 import org.xandercat.swing.zenput.error.ZenputException;
+import org.xandercat.swing.zenput.validator.Control;
 import org.xandercat.swing.zenput.validator.Validator;
 
 public interface Processor {
@@ -57,6 +58,18 @@ public interface Processor {
 	 * @throws ZenputException if error occurs registering validator
 	 */
 	public void registerValidator(String fieldName, Validator<?> validator) throws ZenputException;
+	
+	/**
+	 * Registers a control for the field of given field name.  A control determines
+	 * whether or not a field should be validated.  Control type should be of the same
+	 * type or a superclass type of the field type.
+	 * 
+	 * @param fieldName         name of field
+	 * @param control           control for field
+	 * 
+	 * @throws ZenputException if error occurs registering control
+	 */
+	public void registerControl(String fieldName, Control<?> control) throws ZenputException;
 	
 	/**
 	 * Sets the object responsible for retrieving values by field name.
