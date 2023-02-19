@@ -24,7 +24,7 @@ import org.xandercat.swing.zenput.processor.ValueRetriever;
  * @param <T>	type of field being validated
  * @param <D>	type of field validation is dependent upon
  */
-public class ConditionalValidator<T, D> implements DependencyValidator<T> {
+public class ConditionDependencyValidator<T, D> implements DependencyValidator<T> {
 
 	private DependentCondition<T, D> condition;
 	private DependencyType type;
@@ -33,7 +33,7 @@ public class ConditionalValidator<T, D> implements DependencyValidator<T> {
 	private Validator<T> validator;
 	private Class<T> valueType;
 	
-	public ConditionalValidator(String dependencyFieldName, 
+	public ConditionDependencyValidator(String dependencyFieldName, 
 			DependentCondition<T, D> condition,
 			DependencyType type,
 			Validator<T> validator,

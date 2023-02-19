@@ -15,7 +15,7 @@ import org.xandercat.swing.zenput.condition.DependencyType;
 import org.xandercat.swing.zenput.condition.DependentCondition;
 import org.xandercat.swing.zenput.error.ZenputException;
 import org.xandercat.swing.zenput.validator.CompoundValidator;
-import org.xandercat.swing.zenput.validator.ConditionalValidator;
+import org.xandercat.swing.zenput.validator.ConditionDependencyValidator;
 import org.xandercat.swing.zenput.validator.Validator;
 
 /**
@@ -114,7 +114,7 @@ public class AnnotationHandler {
 			if ((validator == null) && (cvAnno.type() == DependencyType.CONDITION)) { // having no validator is okay for DependencyType.VALIDATION
 				log.error("ValidateConditional annotation exists without any actual validations to perform.");
 			} else {
-				ConditionalValidator cv = new ConditionalValidator(
+				ConditionDependencyValidator cv = new ConditionDependencyValidator(
 						cvAnno.dependentOn(), cvCondition, cvAnno.type(), validator, processor.getRegisteredFieldType(field.getName()));
 				processor.registerValidator(field.getName(), cv);
 			}
