@@ -73,6 +73,12 @@ public class NumericCondition implements DependentCondition<Number, Number> {
 		return (clazz == Short.class || clazz == Integer.class || clazz == Long.class);
 	}
 
-	
-
+	@Override
+	public String getDescription(String conditionalValueFieldName) {
+		if (compareToFixedValue == null) {
+			return "Must be " + operator + " value in field " + conditionalValueFieldName;
+		} else {
+			return "Field " + conditionalValueFieldName + " must be " + operator + " value of " + compareToFixedValue.toString();
+		}
+	}	
 }

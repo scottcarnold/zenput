@@ -113,7 +113,8 @@ public class AnnotationHandler {
 			if (validator == null) {
 				log.error("ValidateConditional annotation exists without any Validator annotations.");
 			} else {
-				ConditionalValidator cv = new ConditionalValidator(cvAnno.dependentOn(), cvCondition, validator);
+				ConditionalValidator cv = new ConditionalValidator(
+						cvAnno.dependentOn(), cvCondition, cvAnno.type(), validator, processor.getRegisteredFieldType(field.getName()));
 				processor.registerValidator(field.getName(), cv);
 			}
 		} else if (cvAnno != null || cvCondition != null) {

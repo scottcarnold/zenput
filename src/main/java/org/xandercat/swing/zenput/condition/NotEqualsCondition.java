@@ -48,4 +48,15 @@ public class NotEqualsCondition<D, T> implements DependentCondition<D, T> {
 					&& (compareToValue == null || !compareToValue.equals(conditionalValue));
 		}
 	}
+
+	@Override
+	public String getDescription(String conditionalValueFieldName) {
+		if (compareToValue == null) {
+			return "Must be NOT equal to value in field " + conditionalValueFieldName;
+		} else {
+			return "Field " + conditionalValueFieldName + " must NOT have a value of " + compareToValue.toString();
+		}
+	}
+	
+	
 }

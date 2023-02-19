@@ -31,15 +31,18 @@ public class ConditionalValidator<T, D> implements DependentValidator<T> {
 	private ValueRetriever valueRetriever;
 	private String dependencyFieldName;
 	private Validator<T> validator;
+	private Class<T> valueType;
 	
 	public ConditionalValidator(String dependencyFieldName, 
 			DependentCondition<T, D> condition,
 			DependencyType type,
-			Validator<T> validator) {
+			Validator<T> validator,
+			Class<T> valueType) {
 		this.condition = condition;
 		this.dependencyFieldName = dependencyFieldName;
 		this.type = type;
 		this.validator = validator;
+		this.valueType = valueType;
 	}
 	
 	@Override
@@ -54,7 +57,7 @@ public class ConditionalValidator<T, D> implements DependentValidator<T> {
 
 	@Override
 	public Class<T> getValueType() {
-		return validator.getValueType();
+		return valueType;
 	}
 
 	@Override
