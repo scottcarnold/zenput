@@ -11,7 +11,7 @@ import org.xandercat.swing.zenput.processor.ValueRetriever;
  *
  * @param <T>	type of field to be validated
  */
-public interface DependentValidator<T> extends Validator<T> {
+public interface DependencyValidator<T> extends Validator<T> {
 	
 	/**
 	 * Sets the value retriever this validator should use to retrieve the values

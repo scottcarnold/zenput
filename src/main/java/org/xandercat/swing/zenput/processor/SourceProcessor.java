@@ -11,7 +11,7 @@ import org.xandercat.swing.zenput.util.DependencyChain;
 import org.xandercat.swing.zenput.util.ReflectionUtil;
 import org.xandercat.swing.zenput.error.ValidationException;
 import org.xandercat.swing.zenput.error.ZenputException;
-import org.xandercat.swing.zenput.validator.DependentValidator;
+import org.xandercat.swing.zenput.validator.DependencyValidator;
 import org.xandercat.swing.zenput.validator.Validator;
 
 /**
@@ -125,8 +125,8 @@ public class SourceProcessor implements Processor, ValueRetriever {
 		}
 		List<Validator<?>> validators = this.validators.get(this.fieldOrder.get(fieldName));
 		validators.add(validator);
-		if (validator instanceof DependentValidator) {
-			DependentValidator<?> dependentValidator = (DependentValidator<?>) validator;
+		if (validator instanceof DependencyValidator) {
+			DependencyValidator<?> dependentValidator = (DependencyValidator<?>) validator;
 			dependentValidator.setValueRetriever(this.valueRetriever);
 			this.dependenciesBuilt = false;	// will force dependencies to be reconstructed on next validate
 			this.dependencyChain.add(fieldName, dependentValidator.getDependencyFieldNames());
