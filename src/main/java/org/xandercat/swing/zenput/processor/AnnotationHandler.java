@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xandercat.swing.zenput.annotation.InputField;
 import org.xandercat.swing.zenput.annotation.ValidateConditional;
+import org.xandercat.swing.zenput.condition.DependencyType;
 import org.xandercat.swing.zenput.condition.DependentCondition;
 import org.xandercat.swing.zenput.error.ZenputException;
 import org.xandercat.swing.zenput.validator.CompoundValidator;
@@ -110,8 +111,8 @@ public class AnnotationHandler {
 				Validator<?>[] validatorArray = new Validator[fieldValidators.size()];
 				validator = new CompoundValidator(fieldValidators.toArray(validatorArray));
 			}
-			if (validator == null) {
-				log.error("ValidateConditional annotation exists without any Validator annotations.");
+			if ((validator == null) && (cvAnno.type() == DependencyType.CONDITION)) { // having no validator is okay for DependencyType.VALIDATION
+				log.error("ValidateConditional annotation exists without any actual validations to perform.");
 			} else {
 				ConditionalValidator cv = new ConditionalValidator(
 						cvAnno.dependentOn(), cvCondition, cvAnno.type(), validator, processor.getRegisteredFieldType(field.getName()));
