@@ -2,7 +2,8 @@ package org.xandercat.swing.zenput.condition;
 
 import java.text.ParseException;
 
-import org.xandercat.swing.zenput.annotation.ConditionNumeric;
+import org.xandercat.swing.zenput.annotation.ControlNumeric;
+import org.xandercat.swing.zenput.annotation.ValidateDependencyNumeric;
 import org.xandercat.swing.zenput.util.TypeUtil;
 
 public class NumericCondition implements DependentCondition<Number, Number> {
@@ -10,20 +11,28 @@ public class NumericCondition implements DependentCondition<Number, Number> {
 	private Operator operator;
 	private Number compareToFixedValue;
 	
-	public static NumericCondition newCondition(ConditionNumeric annotation) throws ParseException {
-		if (annotation.operator() == null) {
+	public static NumericCondition newCondition(ControlNumeric annotation) throws ParseException {
+		return newCondition(annotation.operator(), annotation.valueType(), annotation.stringValue());
+	}
+	
+	public static NumericCondition newCondition(ValidateDependencyNumeric annotation) throws ParseException {
+		return newCondition(annotation.operator(), annotation.valueType(), annotation.stringValue());
+	}
+	
+	private static NumericCondition newCondition(Operator operator, Class<?> valueType, String stringValue) throws ParseException {
+		if (operator == null) {
 			throw new IllegalArgumentException("operator value is required.");
 		}
-		if (annotation.valueType() != null && annotation.stringValue() == null) {
+		if (valueType != null && stringValue == null) {
 			throw new IllegalArgumentException("If specifying valueType, stringValue must also be provided.");
 		}
-		if (annotation.valueType() == null && annotation.stringValue() != null) {
+		if (valueType == null && stringValue != null) {
 			throw new IllegalArgumentException("If specifying stringValue, valueType must also be provided.");
 		}
-		if (annotation.valueType() != null) {
-			return new NumericCondition(annotation.operator(), (Number) TypeUtil.parse(annotation.valueType(), annotation.stringValue()));
+		if (valueType != null) {
+			return new NumericCondition(operator, (Number) TypeUtil.parse(valueType, stringValue));
 		} else {
-			return new NumericCondition(annotation.operator());
+			return new NumericCondition(operator);
 		}
 	}
 	

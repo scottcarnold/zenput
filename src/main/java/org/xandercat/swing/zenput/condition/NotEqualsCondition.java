@@ -2,7 +2,8 @@ package org.xandercat.swing.zenput.condition;
 
 import java.text.ParseException;
 
-import org.xandercat.swing.zenput.annotation.ConditionNotEquals;
+import org.xandercat.swing.zenput.annotation.ControlNotEquals;
+import org.xandercat.swing.zenput.annotation.ValidateDependencyNotEquals;
 import org.xandercat.swing.zenput.util.TypeUtil;
 
 /**
@@ -17,18 +18,26 @@ public class NotEqualsCondition<D, T> implements DependentCondition<D, T> {
 
 	private T compareToValue;
 
-	public static <D, T> NotEqualsCondition<D, T> newCondition(ConditionNotEquals annotation) throws ParseException {
-		if (annotation.valueType() != null && annotation.stringValue() == null) {
+	public static <D, T> NotEqualsCondition<D, T> newCondition(ControlNotEquals annotation) throws ParseException {
+		return newCondition(annotation.valueType(), annotation.stringValue());
+	}
+	
+	public static <D, T> NotEqualsCondition<D, T> newCondition(ValidateDependencyNotEquals annotation) throws ParseException {
+		return newCondition(annotation.valueType(), annotation.stringValue());
+	}
+	
+	private static <D, T> NotEqualsCondition<D, T> newCondition(Class<?> valueType, String stringValue) throws ParseException {
+		if (valueType != null && stringValue == null) {
 			throw new IllegalArgumentException("If specifying valueType, stringValue must also be provided.");
 		}
-		if (annotation.valueType() == null && annotation.stringValue() != null) {
+		if (valueType == null && stringValue != null) {
 			throw new IllegalArgumentException("If specifying stringValue, valueType must also be provided.");
 		}
-		if (annotation.valueType() != null) {
-			return new NotEqualsCondition<D, T>((T) TypeUtil.parse(annotation.valueType(), annotation.stringValue()));
+		if (valueType != null) {
+			return new NotEqualsCondition<D, T>((T) TypeUtil.parse(valueType, stringValue));
 		} else {
 			return new NotEqualsCondition<D, T>();
-		}
+		}		
 	}
 	
 	public NotEqualsCondition() {

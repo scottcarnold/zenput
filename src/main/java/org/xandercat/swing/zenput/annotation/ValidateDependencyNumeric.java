@@ -5,12 +5,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.xandercat.swing.zenput.condition.EqualsCondition;
+import org.xandercat.swing.zenput.condition.NumericCondition;
+import org.xandercat.swing.zenput.condition.Operator;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface ConditionEquals {
-	Class<?> conditionClass() default EqualsCondition.class; 
+public @interface ValidateDependencyNumeric {
+	Class<?> conditionClass() default NumericCondition.class; 
+	Operator operator();
 	Class<?> valueType();
 	String stringValue();
 }
