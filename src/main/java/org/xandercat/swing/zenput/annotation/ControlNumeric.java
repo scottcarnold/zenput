@@ -11,6 +11,7 @@ import org.xandercat.swing.zenput.condition.Operator;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ControlNumeric {
+	String dependencyOn();
 	Class<?> conditionClass() default NumericCondition.class; 
 	Operator operator();
 	Class<?> valueType();

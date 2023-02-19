@@ -23,12 +23,10 @@ public class ConditionDependencyValidator<T, D> implements DependencyValidator<T
 	private String dependencyFieldName;
 	private Class<T> valueType;
 	
-	public ConditionDependencyValidator(String dependencyFieldName, 
-			DependentCondition<T, D> condition,
-			Validator<T> validator,
+	public ConditionDependencyValidator(DependentCondition<T, D> condition,
 			Class<T> valueType) {
 		this.condition = condition;
-		this.dependencyFieldName = dependencyFieldName;
+		this.dependencyFieldName = condition.getDependencyFieldName();
 		this.valueType = valueType;
 	}
 	

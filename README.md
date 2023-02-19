@@ -14,7 +14,7 @@ The processor can then be wrapped by an InputProcessor, which provides the means
 
 Once a processor is constructed, validate methods can be called to validate some or all fields.  After validate is called, getError methods can be called to retrieve any validation errors.  The InputProcessor provides additional options on how validation operates and when data from the input compoonents gets committed back to the source object.  You can also set how to change the appearance of invalid user inputs with the setDefaultMarkerBuilder method.  Zenput provides a small collection of markers that can be used to style common Swing input components.
 
-## Basic Validation
+## Processors
 
 Putting it all into an example, assume you have a Source Class as follows:
 
@@ -88,6 +88,67 @@ or
 	
 The first approach will set a common marker for all input fields of the specified type, whereas the second approach will set the marker just for the specified field.  Setting a specific marker for a field will override any default marker that would otherwise apply.
 
-## Conditional Validation
+## Validation Controls
 
-Input fields can also have their validation dependent on various conditions.  
+Input fields can also have their validation dependent on various conditions. A control determines whether or not the rest of the validations on the field will be executed or not.  For example, you may have an input field that requires a value, but only if another input field checkbox is checked:
+
+	public class CookieOrder {
+	
+		@InputField(title="Order Cookies?")
+		private boolean orderCookies;
+		
+		@InputField(title="Quantity Ordered")
+		@ControlEquals(dependencyOn="orderCookies", valueType=Boolean.class, stringValue="true")
+		@ValidateRequired
+		@ValidateInteger(min=1,max=100)
+		private Integer quantity;
+		
+		public boolean isOrderCookies() {
+			return orderCookies;
+		}
+		public void setOrderCookies(boolean orderCookies) {
+			this.orderCookies = orderCookies;
+		}
+		public Integer getQuantity() {
+			return quantity;
+		}
+		public void setQuantity(Integer quantity) {
+			this.quantity = quantity;
+		}
+	}	 
+
+## Validation Dependencies
+
+In addition to being able to enable or disable validation on a field with control dependencies, some fields may need validations that are dependent on the values of other fields.  Assume our cookie distributor can gift wrap some or all of the cookies, but they still want the order system to ask for the total quantity of cookies, just with an extra input that asks how many of the cookies should be gift wrapped.  In such case, the quantityWrapped field would need to be less than or equal to the quantity field.
+
+	public class CookieOrder {
+	
+		@InputField(title="Order Cookies?")
+		private boolean orderCookies;
+		
+		@InputField(title="Quantity Ordered")
+		@ControlEquals(dependencyOn="orderCookies", valueType=Boolean.class, stringValue="true")
+		@ValidateRequired
+		@ValidateInteger(min=1,max=100)
+		private Integer quantity;
+		
+		@InputField(title="Quantity Wrapped")
+		@ControlEquals(dependencyOn="orderCookies", valueType=Boolean.class, stringValue="true")
+		@ValidateRequired
+		@ValidateDependencyNumeric(dependencyOn="quantity", operator=Operator.LTEQ)
+		@ValidateInteger(min=0)		
+		private Integer quantityWrapped;
+		
+		public boolean isOrderCookies() {
+			return orderCookies;
+		}
+		public void setOrderCookies(boolean orderCookies) {
+			this.orderCookies = orderCookies;
+		}
+		public Integer getQuantity() {
+			return quantity;
+		}
+		public void setQuantity(Integer quantity) {
+			this.quantity = quantity;
+		}
+	}

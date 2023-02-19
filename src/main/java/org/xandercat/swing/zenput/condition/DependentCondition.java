@@ -7,7 +7,7 @@ package org.xandercat.swing.zenput.condition;
  *
  * @param <T>
  */
-public interface DependentCondition<D, T> {
+public interface DependentCondition<T, D> {
 
 	/**
 	 * Returns true if the condition is met for the given value.
@@ -17,7 +17,7 @@ public interface DependentCondition<D, T> {
 	 * 
 	 * @return		true if condition is met for the value
 	 */
-	public boolean isMet(D fieldValue, T conditionalValue);
+	public boolean isMet(T fieldValue, D conditionalValue);
 	
 	/**
 	 * Returns a description of this condition.
@@ -27,6 +27,13 @@ public interface DependentCondition<D, T> {
 	 * @return description of this condition
 	 */
 	public String getDescription(String conditionalValueFieldName);
+	
+	/**
+	 * Returns the name of the field that the condition dependency exists on.
+	 * 
+	 * @return the name of the field that the condition dependency exists on
+	 */
+	public String getDependencyFieldName();
 	
 	/**
 	 * Returns whether or not the dependency test will require the value of the field

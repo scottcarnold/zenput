@@ -5,13 +5,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.xandercat.swing.zenput.condition.EqualsCondition;
+import org.xandercat.swing.zenput.condition.NotEqualsCondition;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ControlNotEquals {
 	String dependencyOn();
-	Class<?> conditionClass() default EqualsCondition.class; 
+	Class<?> conditionClass() default NotEqualsCondition.class; 
 	Class<?> valueType();
 	String stringValue();
 }

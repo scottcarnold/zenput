@@ -4,8 +4,19 @@ import org.xandercat.swing.zenput.annotation.ControlNotEmpty;
 
 public class NotEmptyCondition<D, T> implements DependentCondition<D, T> {
 
+	private String dependencyFieldName;
+	
 	public static <D, T> NotEmptyCondition<D, T> newCondition(ControlNotEmpty annotation) {
-		return new NotEmptyCondition<D, T>();
+		return new NotEmptyCondition<D, T>(annotation.dependencyOn());
+	}
+	
+	public NotEmptyCondition(String dependencyFieldName) {
+		this.dependencyFieldName = dependencyFieldName;
+	}
+	
+	@Override
+	public String getDependencyFieldName() {
+		return dependencyFieldName;
 	}
 	
 	@Override

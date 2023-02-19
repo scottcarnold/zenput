@@ -4,17 +4,13 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xandercat.swing.zenput.annotation.InputField;
-import org.xandercat.swing.zenput.annotation.ValidateConditional;
-import org.xandercat.swing.zenput.condition.DependencyType;
 import org.xandercat.swing.zenput.condition.DependentCondition;
 import org.xandercat.swing.zenput.error.ZenputException;
-import org.xandercat.swing.zenput.validator.CompoundValidator;
+import org.xandercat.swing.zenput.validator.ConditionDependencyControl;
 import org.xandercat.swing.zenput.validator.ConditionDependencyValidator;
 import org.xandercat.swing.zenput.validator.Validator;
 
@@ -78,52 +74,70 @@ public class AnnotationHandler {
 	}
 	
 	private static void registerValidators(Processor processor, Field field) throws ZenputException {
-		List<Validator<?>> fieldValidators = new ArrayList<Validator<?>>();
-		ValidateConditional cvAnno = null;
-		DependentCondition cvCondition = null;
 		for (Annotation anno : field.getAnnotations()) {
-			if (anno instanceof ValidateConditional) {
-				if (cvAnno == null) {
-					cvAnno = (ValidateConditional) anno;
-				} else {
-					log.error("There can only be one ValidateConditional annotation per field.  All but one ValidateConditional annotation will be ignored.");
-				}
-			}
-			DependentCondition condition = createObjectFromAnnotation(anno, "conditionClass", "newCondition");
-			if (condition != null) {
-				if (cvCondition == null) {
-					cvCondition = condition;
-				} else {
-					log.error("There can only be one Condition annotation per field.  All but one Condition annotation will be ignored.");
-				}
-			} else {
+			// discover controls and validation dependencies by inspecting class name (controls should start with "Control", dependency validations should start with "ValidateDependency")
+			if (anno.annotationType().getSimpleName().startsWith("Control")) {
+				DependentCondition controlCondition = createObjectFromAnnotation(anno, "conditionClass", "newCondition");	
+				ConditionDependencyControl control = new ConditionDependencyControl(controlCondition,  processor.getRegisteredFieldType(field.getName()));
+				processor.registerControl(field.getName(), control);
+			} else if (anno.annotationType().getSimpleName().startsWith("ValidateDependency")) {
+				DependentCondition condition = createObjectFromAnnotation(anno, "conditionClass", "newCondition");	
+				ConditionDependencyValidator dependencyValidator = new ConditionDependencyValidator(condition, processor.getRegisteredFieldType(field.getName()));
+				processor.registerValidator(field.getName(), dependencyValidator);
+			} else if (anno.annotationType().getSimpleName().startsWith("Validate")) {
 				Validator<?> validator = createObjectFromAnnotation(anno, "validatorClass", "newValidator");
-				if (validator != null) {
-					fieldValidators.add(validator);
-				}
-			} 
-		}
-		if (cvAnno != null && cvCondition != null) {
-			Validator<?> validator = null;
-			if (fieldValidators.size() == 1) {
-				validator = fieldValidators.get(0);
-			} else if (fieldValidators.size() > 1) {
-				Validator<?>[] validatorArray = new Validator[fieldValidators.size()];
-				validator = new CompoundValidator(fieldValidators.toArray(validatorArray));
-			}
-			if ((validator == null) && (cvAnno.type() == DependencyType.CONDITION)) { // having no validator is okay for DependencyType.VALIDATION
-				log.error("ValidateConditional annotation exists without any actual validations to perform.");
-			} else {
-				ConditionDependencyValidator cv = new ConditionDependencyValidator(
-						cvAnno.dependentOn(), cvCondition, cvAnno.type(), validator, processor.getRegisteredFieldType(field.getName()));
-				processor.registerValidator(field.getName(), cv);
-			}
-		} else if (cvAnno != null || cvCondition != null) {
-			log.error("ValidateConditional annotation and a condition annotation must both be specified if either is specified.");
-		} else {
-			for (Validator<?> validator : fieldValidators) {
 				processor.registerValidator(field.getName(), validator);
 			}
 		}
 	}
+	
+//	private static void oldregisterValidators(Processor processor, Field field) throws ZenputException {
+//		List<Validator<?>> fieldValidators = new ArrayList<Validator<?>>();
+//		ValidateConditional cvAnno = null;
+//		DependentCondition cvCondition = null;
+//		for (Annotation anno : field.getAnnotations()) {
+//			if (anno instanceof ValidateConditional) {
+//				if (cvAnno == null) {
+//					cvAnno = (ValidateConditional) anno;
+//				} else {
+//					log.error("There can only be one ValidateConditional annotation per field.  All but one ValidateConditional annotation will be ignored.");
+//				}
+//			}
+//			DependentCondition condition = createObjectFromAnnotation(anno, "conditionClass", "newCondition");
+//			if (condition != null) {
+//				if (cvCondition == null) {
+//					cvCondition = condition;
+//				} else {
+//					log.error("There can only be one Condition annotation per field.  All but one Condition annotation will be ignored.");
+//				}
+//			} else {
+//				Validator<?> validator = createObjectFromAnnotation(anno, "validatorClass", "newValidator");
+//				if (validator != null) {
+//					fieldValidators.add(validator);
+//				}
+//			} 
+//		}
+//		if (cvAnno != null && cvCondition != null) {
+//			Validator<?> validator = null;
+//			if (fieldValidators.size() == 1) {
+//				validator = fieldValidators.get(0);
+//			} else if (fieldValidators.size() > 1) {
+//				Validator<?>[] validatorArray = new Validator[fieldValidators.size()];
+//				validator = new CompoundValidator(fieldValidators.toArray(validatorArray));
+//			}
+//			if ((validator == null) && (cvAnno.type() == DependencyType.CONDITION)) { // having no validator is okay for DependencyType.VALIDATION
+//				log.error("ValidateConditional annotation exists without any actual validations to perform.");
+//			} else {
+//				ConditionDependencyValidator cv = new ConditionDependencyValidator(
+//						cvAnno.dependentOn(), cvCondition, cvAnno.type(), validator, processor.getRegisteredFieldType(field.getName()));
+//				processor.registerValidator(field.getName(), cv);
+//			}
+//		} else if (cvAnno != null || cvCondition != null) {
+//			log.error("ValidateConditional annotation and a condition annotation must both be specified if either is specified.");
+//		} else {
+//			for (Validator<?> validator : fieldValidators) {
+//				processor.registerValidator(field.getName(), validator);
+//			}
+//		}
+//	}
 }

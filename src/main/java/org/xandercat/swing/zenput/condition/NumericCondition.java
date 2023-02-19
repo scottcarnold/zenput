@@ -10,16 +10,17 @@ public class NumericCondition implements DependentCondition<Number, Number> {
 
 	private Operator operator;
 	private Number compareToFixedValue;
+	private String dependencyFieldName;
 	
 	public static NumericCondition newCondition(ControlNumeric annotation) throws ParseException {
-		return newCondition(annotation.operator(), annotation.valueType(), annotation.stringValue());
+		return newCondition(annotation.dependencyOn(), annotation.operator(), annotation.valueType(), annotation.stringValue());
 	}
 	
 	public static NumericCondition newCondition(ValidateDependencyNumeric annotation) throws ParseException {
-		return newCondition(annotation.operator(), annotation.valueType(), annotation.stringValue());
+		return newCondition(annotation.dependencyOn(), annotation.operator(), annotation.valueType(), annotation.stringValue());
 	}
 	
-	private static NumericCondition newCondition(Operator operator, Class<?> valueType, String stringValue) throws ParseException {
+	private static NumericCondition newCondition(String dependencyFieldName, Operator operator, Class<?> valueType, String stringValue) throws ParseException {
 		if (operator == null) {
 			throw new IllegalArgumentException("operator value is required.");
 		}
@@ -30,19 +31,25 @@ public class NumericCondition implements DependentCondition<Number, Number> {
 			throw new IllegalArgumentException("If specifying stringValue, valueType must also be provided.");
 		}
 		if (valueType != null) {
-			return new NumericCondition(operator, (Number) TypeUtil.parse(valueType, stringValue));
+			return new NumericCondition(dependencyFieldName, operator, (Number) TypeUtil.parse(valueType, stringValue));
 		} else {
-			return new NumericCondition(operator);
+			return new NumericCondition(dependencyFieldName, operator);
 		}
 	}
 	
-	public NumericCondition(Operator operator) {
+	public NumericCondition(String dependencyFieldName, Operator operator) {
 		this.operator = operator;
+		this.dependencyFieldName = dependencyFieldName;
 	}
 	
-	public NumericCondition(Operator operator, Number compareToFixedValue) {
-		this(operator);
+	public NumericCondition(String dependencyFieldName, Operator operator, Number compareToFixedValue) {
+		this(dependencyFieldName, operator);
 		this.compareToFixedValue = compareToFixedValue;
+	}
+	
+	@Override
+	public String getDependencyFieldName() {
+		return dependencyFieldName;
 	}
 	
 	@Override

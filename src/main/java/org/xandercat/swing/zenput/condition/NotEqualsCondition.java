@@ -17,16 +17,17 @@ import org.xandercat.swing.zenput.util.TypeUtil;
 public class NotEqualsCondition<D, T> implements DependentCondition<D, T> {
 
 	private T compareToValue;
+	private String dependencyFieldName;
 
 	public static <D, T> NotEqualsCondition<D, T> newCondition(ControlNotEquals annotation) throws ParseException {
-		return newCondition(annotation.valueType(), annotation.stringValue());
+		return newCondition(annotation.dependencyOn(), annotation.valueType(), annotation.stringValue());
 	}
 	
 	public static <D, T> NotEqualsCondition<D, T> newCondition(ValidateDependencyNotEquals annotation) throws ParseException {
-		return newCondition(annotation.valueType(), annotation.stringValue());
+		return newCondition(annotation.dependencyOn(), annotation.valueType(), annotation.stringValue());
 	}
 	
-	private static <D, T> NotEqualsCondition<D, T> newCondition(Class<?> valueType, String stringValue) throws ParseException {
+	private static <D, T> NotEqualsCondition<D, T> newCondition(String dependencyFieldName, Class<?> valueType, String stringValue) throws ParseException {
 		if (valueType != null && stringValue == null) {
 			throw new IllegalArgumentException("If specifying valueType, stringValue must also be provided.");
 		}
@@ -34,17 +35,24 @@ public class NotEqualsCondition<D, T> implements DependentCondition<D, T> {
 			throw new IllegalArgumentException("If specifying stringValue, valueType must also be provided.");
 		}
 		if (valueType != null) {
-			return new NotEqualsCondition<D, T>((T) TypeUtil.parse(valueType, stringValue));
+			return new NotEqualsCondition<D, T>(dependencyFieldName, (T) TypeUtil.parse(valueType, stringValue));
 		} else {
-			return new NotEqualsCondition<D, T>();
+			return new NotEqualsCondition<D, T>(dependencyFieldName);
 		}		
 	}
 	
-	public NotEqualsCondition() {
+	public NotEqualsCondition(String dependencyFieldName) {
+		this.dependencyFieldName = dependencyFieldName;
 	}
 	
-	public NotEqualsCondition(T compareToValue) {
+	public NotEqualsCondition(String dependencyFieldName, T compareToValue) {
+		this(dependencyFieldName);
 		this.compareToValue = compareToValue;
+	}
+	
+	@Override
+	public String getDependencyFieldName() {
+		return dependencyFieldName;
 	}
 	
 	@Override

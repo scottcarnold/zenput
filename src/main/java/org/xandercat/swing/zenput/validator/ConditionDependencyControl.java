@@ -15,11 +15,10 @@ public class ConditionDependencyControl<T, D> implements DependencyControl<T> {
 	private String dependencyFieldName;
 	private Class<T> valueType;
 	
-	public ConditionDependencyControl(String dependencyFieldName, 
-			DependentCondition<T, D> condition,
+	public ConditionDependencyControl(DependentCondition<T, D> condition,
 			Class<T> valueType) {
 		this.condition = condition;
-		this.dependencyFieldName = dependencyFieldName;
+		this.dependencyFieldName = condition.getDependencyFieldName();
 		this.valueType = valueType;
 	}
 	

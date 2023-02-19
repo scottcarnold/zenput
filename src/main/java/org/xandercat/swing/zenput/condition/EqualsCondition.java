@@ -8,17 +8,18 @@ import org.xandercat.swing.zenput.util.TypeUtil;
 
 public class EqualsCondition<D, T> implements DependentCondition<D, T> {
 	
+	private String dependencyFieldName;
 	private T compareToFixedValue;
 	
 	public static <D, T> EqualsCondition<D, T> newCondition(ControlEquals annotation) throws ParseException {
-		return newCondition(annotation.valueType(), annotation.stringValue());
+		return newCondition(annotation.dependencyOn(), annotation.valueType(), annotation.stringValue());
 	}
 	
 	public static <D, T> EqualsCondition<D, T> newCondition(ValidateDependencyEquals annotation) throws ParseException {
-		return newCondition(annotation.valueType(), annotation.stringValue());
+		return newCondition(annotation.dependencyOn(), annotation.valueType(), annotation.stringValue());
 	}
 	
-	private static <D, T> EqualsCondition<D, T> newCondition(Class<?> valueType, String stringValue) throws ParseException {
+	private static <D, T> EqualsCondition<D, T> newCondition(String dependencyFieldName, Class<?> valueType, String stringValue) throws ParseException {
 		if (valueType != null && stringValue == null) {
 			throw new IllegalArgumentException("If specifying valueType, stringValue must also be provided.");
 		}
@@ -26,19 +27,26 @@ public class EqualsCondition<D, T> implements DependentCondition<D, T> {
 			throw new IllegalArgumentException("If specifying stringValue, valueType must also be provided.");
 		}
 		if (valueType != null) {
-			return new EqualsCondition<D, T>((T) TypeUtil.parse(valueType, stringValue));
+			return new EqualsCondition<D, T>(dependencyFieldName, (T) TypeUtil.parse(valueType, stringValue));
 		} else {
-			return new EqualsCondition<D, T>();
+			return new EqualsCondition<D, T>(dependencyFieldName);
 		}		
 	}
 	
-	public EqualsCondition() {
+	public EqualsCondition(String dependencyFieldName) {
+		this.dependencyFieldName = dependencyFieldName;
 	}
 	
-	public EqualsCondition(T compareToFixedValue) {
+	public EqualsCondition(String dependencyFieldName, T compareToFixedValue) {
+		this(dependencyFieldName);
 		this.compareToFixedValue = compareToFixedValue;
 	}
 	
+	@Override
+	public String getDependencyFieldName() {
+		return dependencyFieldName;
+	}
+
 	@Override
 	public boolean requiresFieldValue() {
 		return compareToFixedValue == null;
