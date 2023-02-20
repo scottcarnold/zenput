@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -37,7 +38,12 @@ public class ValidationErrorUtil {
 	public static Properties getDefaultMessageProperties() {
 		Properties defaultProperties = new Properties();
 		try {
-			defaultProperties.load(ValidationErrorUtil.class.getResourceAsStream("zenput.messages"));
+			InputStream inputStream = ValidationErrorUtil.class.getResourceAsStream("/zenput.messages");
+			if (inputStream == null) {
+				log.warn("Unable to find default message properties.");
+				return null;
+			}
+			defaultProperties.load(inputStream);
 		} catch (IOException e) {
 			log.error("Unable to load default message properties.", e);
 			return null;
