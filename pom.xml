@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.xandercat</groupId>
 	<artifactId>zenput</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>Zenput</name>
 	<description>Input validation framework for Java Swing</description>
 	<properties>
