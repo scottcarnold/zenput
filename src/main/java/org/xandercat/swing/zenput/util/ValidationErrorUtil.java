@@ -47,11 +47,13 @@ public class ValidationErrorUtil {
 	
 	public static String getMessage(Properties messageProperties, ValidationException validationException) {
 		if (messageProperties == null) {
-			return validationException.getMessageKey(); //TODO: Handy for development, but maybe should just return generic message here?
+			log.warn("No message properties provided for formatting error messages.");
+			return "Field is invalid.";
 		}
 		String messageTemplate = (String) messageProperties.get(validationException.getMessageKey());
 		if (messageTemplate == null) {
-			return validationException.getMessageKey();
+			log.warn("No error message template exists for message key " + validationException.getMessageKey());
+			return "Field is invalid.";
 		}
 		Map<String, Object> rawReplacementValues = validationException.getMessageParameters();
 		// TODO: Consider how to add formatting for raw values; for now, just use toString() on them
