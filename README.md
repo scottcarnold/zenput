@@ -152,3 +152,14 @@ In addition to being able to enable or disable validation on a field with contro
 			this.quantity = quantity;
 		}
 	}
+
+## Validation Messages
+
+Validation messages are tied to message keys which are looked up from a message properties file.  Zenput has a defualt message properties file, but a customized version can be used when building messages for display to the user.  You can set the message properties on the Processor, after which it will be used when building a validation message dialog with the ValidationErrorUtil and may also be used by Markers:
+
+	Properties properties = getMyProperties();
+	processor.setMessageProperties(properties);
+	...
+	ValidationErrorUtil.showMessageDialog(...)
+
+

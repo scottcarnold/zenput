@@ -1,6 +1,7 @@
 package org.xandercat.swing.zenput.marker;
 
 import java.awt.Color;
+import java.util.Properties;
 
 import org.xandercat.swing.zenput.error.ValidationException;
 
@@ -25,8 +26,9 @@ public interface Marker<T> {
 	 * Mark the field as invalid.
 	 * 
 	 * @param error		validation error 
+	 * @param messageProperties message properties to use if marking will include display of validation message
 	 */
-	public void markInvalid(ValidationException error);
+	public void markInvalid(ValidationException error, Properties messageProperties);
 
 	/**
 	 * Returns whether or not the mark target is currently marked valid.

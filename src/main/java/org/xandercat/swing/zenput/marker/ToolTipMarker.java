@@ -1,8 +1,11 @@
 package org.xandercat.swing.zenput.marker;
 
+import java.util.Properties;
+
 import javax.swing.JComponent;
 
 import org.xandercat.swing.zenput.error.ValidationException;
+import org.xandercat.swing.zenput.util.ValidationErrorUtil;
 
 /**
  * Marker that sets the tool tip of a JComponent to the validation error message when a 
@@ -25,8 +28,8 @@ public class ToolTipMarker extends AbstractMarker<JComponent> {
 	}
 
 	@Override
-	protected void markInvalid(JComponent markTarget, ValidationException error) {
-		markTarget.setToolTipText(TT_BEGIN + error.getMessage() + TT_END);		
+	protected void markInvalid(JComponent markTarget, ValidationException error, Properties messageProperties) {
+		markTarget.setToolTipText(TT_BEGIN + ValidationErrorUtil.getMessage(messageProperties, error) + TT_END);		
 	}
 
 	@Override

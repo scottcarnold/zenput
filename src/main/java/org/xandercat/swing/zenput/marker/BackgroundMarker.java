@@ -1,6 +1,7 @@
 package org.xandercat.swing.zenput.marker;
 
 import java.awt.Color;
+import java.util.Properties;
 
 import javax.swing.JComponent;
 
@@ -27,7 +28,7 @@ public class BackgroundMarker extends AbstractMarker<JComponent> {
 	}
 	
 	@Override
-	protected void markInvalid(JComponent inputComponent, ValidationException error) {
+	protected void markInvalid(JComponent inputComponent, ValidationException error, Properties messageProperties) {
 		inputComponent.setBackground(invalidColor);
 	}
 

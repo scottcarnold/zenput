@@ -282,7 +282,7 @@ public class InputProcessor implements Processor, ValueRetriever {
 					if (valid) {
 						marker.markValid();
 					} else {
-						marker.markInvalid(ve);
+						marker.markInvalid(ve, processor.getMessageProperties());
 					}
 				}
 			}

@@ -21,7 +21,7 @@ public class MarkerFactoryTest {
 		assertEquals(Color.BLUE, testField.getBackground());
 		assertTrue(testMarker.isMarkedValid());
 		ValidationException ve = new ValidationException("testField", "test");
-		testMarker.markInvalid(ve);
+		testMarker.markInvalid(ve, null);
 		assertEquals(Color.CYAN, testField.getBackground());
 		assertFalse(testField.isValid());
 		testMarker.markValid();
@@ -38,7 +38,7 @@ public class MarkerFactoryTest {
 		assertEquals(Color.BLUE, testField.getForeground());
 		assertTrue(testMarker.isMarkedValid());
 		ValidationException ve = new ValidationException("testField", "test");
-		testMarker.markInvalid(ve);
+		testMarker.markInvalid(ve, null);
 		assertEquals(Color.CYAN, testField.getForeground());
 		assertFalse(testField.isValid());
 		testMarker.markValid();
@@ -55,7 +55,7 @@ public class MarkerFactoryTest {
 		assertEquals("text", testField.getToolTipText());
 		assertTrue(testMarker.isMarkedValid());
 		ValidationException ve = new ValidationException("testField", "test error message");
-		testMarker.markInvalid(ve);
+		testMarker.markInvalid(ve, null);
 		assertTrue(testField.getToolTipText().contains("test error message"));
 		assertFalse(testField.isValid());
 		testMarker.markValid();
@@ -75,7 +75,7 @@ public class MarkerFactoryTest {
 		assertEquals(Color.BLUE, testField.getBackground());
 		assertTrue(testMarker.isMarkedValid());
 		ValidationException ve = new ValidationException("testField", "test");
-		testMarker.markInvalid(ve);
+		testMarker.markInvalid(ve, null);
 		assertEquals(Marker.DEFAULT_INVALID_TEXT_COLOR, testField.getForeground());
 		assertEquals(Marker.DEFAULT_INVALID_COLOR, testField.getBackground());
 		assertFalse(testField.isValid());

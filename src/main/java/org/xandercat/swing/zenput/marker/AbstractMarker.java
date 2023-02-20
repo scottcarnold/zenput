@@ -1,5 +1,7 @@
 package org.xandercat.swing.zenput.marker;
 
+import java.util.Properties;
+
 import org.xandercat.swing.zenput.error.ValidationException;
 
 /**
@@ -21,7 +23,7 @@ public abstract class AbstractMarker<T> implements Marker<T> {
 	
 	protected abstract void markValid(T markTarget);
 	
-	protected abstract void markInvalid(T markTarget, ValidationException error);
+	protected abstract void markInvalid(T markTarget, ValidationException error, Properties messageProperties);
 
 	@Override
 	public boolean isMarkedValid() {
@@ -29,8 +31,8 @@ public abstract class AbstractMarker<T> implements Marker<T> {
 	}
 
 	@Override
-	public void markInvalid(ValidationException error) {
-		markInvalid(markTarget, error);
+	public void markInvalid(ValidationException error, Properties messageProperties) {
+		markInvalid(markTarget, error, messageProperties);
 		this.valid = false;
 	}
 

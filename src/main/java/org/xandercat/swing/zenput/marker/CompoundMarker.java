@@ -3,6 +3,7 @@ package org.xandercat.swing.zenput.marker;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 import org.xandercat.swing.zenput.error.ValidationException;
 
@@ -39,9 +40,9 @@ public class CompoundMarker<T> implements Marker<T> {
 	}
 
 	@Override
-	public void markInvalid(ValidationException error) {
+	public void markInvalid(ValidationException error, Properties messageProperties) {
 		for (Marker<? super T> marker : markers) {
-			marker.markInvalid(error);
+			marker.markInvalid(error, messageProperties);
 		}
 		valid = false;
 		
