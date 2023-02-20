@@ -3,6 +3,7 @@ package org.xandercat.swing.zenput.marker;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.awt.Color;
+import java.util.Properties;
 
 import javax.swing.JComponent;
 import javax.swing.JTextField;
@@ -54,9 +55,11 @@ public class MarkerFactoryTest {
 		Marker<JComponent> testMarker = builder.newMarker(testField);
 		assertEquals("text", testField.getToolTipText());
 		assertTrue(testMarker.isMarkedValid());
-		ValidationException ve = new ValidationException("testField", "test error message");
-		testMarker.markInvalid(ve, null);
-		assertTrue(testField.getToolTipText().contains("test error message"));
+		ValidationException ve = new ValidationException("testField", "validator.required");
+		Properties properties = new Properties();
+		properties.setProperty("validator.required", "Value is required");
+		testMarker.markInvalid(ve, properties);
+		assertTrue(testField.getToolTipText().contains("Value is required"));
 		assertFalse(testField.isValid());
 		testMarker.markValid();
 		assertEquals("text", testField.getToolTipText());
