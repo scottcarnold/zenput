@@ -114,9 +114,20 @@ public class ValidationErrorUtil {
 	/**
 	 * Show a basic validation error message dialog.
 	 * 
+	 * @param parent                    parent frame
+	 * @param inputProcessor            input processor
+	 * @param message                   message to show along with the validation exceptions
+	 */
+	public static void showMessageDialog(Component parent, InputProcessor inputProcessor, String message) {
+		showMessageDialog(parent, inputProcessor, inputProcessor.getErrors(), message);
+	}
+	
+	/**
+	 * Show a basic validation error message dialog.
+	 * 
 	 * @param parent					parent frame
 	 * @param inputProcessor			input processor
-	 * @param validationExceptions		validation exceptions
+	 * @param validationExceptions		validation exceptions to show
 	 * @param message					message to show along with the validation exceptions
 	 */
 	public static void showMessageDialog(Component parent, InputProcessor inputProcessor, List<ValidationException> validationExceptions, String message) {
