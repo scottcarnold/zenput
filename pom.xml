@@ -48,7 +48,7 @@
 		</dependency>
 	</dependencies>
 	<scm>
-		<developerConnection>https://github.com/scottcarnold/zenput.git</developerConnection>
+		<developerConnection>scm:git:https://github.com/scottcarnold/zenput.git</developerConnection>
 	</scm>
 	<build>
 		<plugins>
