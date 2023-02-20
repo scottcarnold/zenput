@@ -1,5 +1,7 @@
 package org.xandercat.swing.zenput.validator;
 
+import java.util.Collections;
+
 import org.xandercat.swing.zenput.annotation.ValidateDouble;
 import org.xandercat.swing.zenput.error.ValidationException;
 
@@ -34,10 +36,10 @@ public class DoubleValidator extends AbstractValidator<Double> {
 	@Override
 	public void validate(String fieldName, Double value) throws ValidationException {
 		if (value.doubleValue() > this.maxValue) {
-			throw new ValidationException(fieldName, "Value cannot be greater than " + this.maxValue);
+			throw new ValidationException(fieldName, "validator.number.max", Collections.singletonMap("max", this.maxValue));
 		}
 		if (value.doubleValue() < this.minValue) {
-			throw new ValidationException(fieldName, "Value cannot be less than " + this.minValue);
+			throw new ValidationException(fieldName, "validator.number.min", Collections.singletonMap("min", this.minValue));
 		}
 	}
 }

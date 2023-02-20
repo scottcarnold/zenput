@@ -1,5 +1,8 @@
 package org.xandercat.swing.zenput.condition;
 
+import java.util.Collections;
+import java.util.Map;
+
 import org.xandercat.swing.zenput.annotation.ControlNotEmpty;
 
 public class NotEmptyCondition<D, T> implements DependentCondition<D, T> {
@@ -28,12 +31,19 @@ public class NotEmptyCondition<D, T> implements DependentCondition<D, T> {
 	}
 
 	@Override
-	public String getDescription(String conditionalValueFieldName) {
-		return "Field " + conditionalValueFieldName + " must be not empty.";
-	}
-
-	@Override
 	public boolean requiresFieldValue() {
 		return false;
 	}
+
+	@Override
+	public String getMessageKey() {
+		return "condition.notEmpty";
+	}
+
+	@Override
+	public Map<String, Object> getMessageParameters() {
+		return Collections.singletonMap("dependencyFieldName", dependencyFieldName);
+	}
+	
+	
 }

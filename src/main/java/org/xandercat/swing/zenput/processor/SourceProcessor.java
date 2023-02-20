@@ -1,14 +1,17 @@
 package org.xandercat.swing.zenput.processor;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.xandercat.swing.zenput.util.DependencyChain;
 import org.xandercat.swing.zenput.util.ReflectionUtil;
+import org.xandercat.swing.zenput.util.ValidationErrorUtil;
 import org.xandercat.swing.zenput.error.ValidationException;
 import org.xandercat.swing.zenput.error.ZenputException;
 import org.xandercat.swing.zenput.validator.Control;
@@ -36,6 +39,7 @@ public class SourceProcessor implements Processor, ValueRetriever {
 	protected final Object defaultSource;
 	private final DependencyChain<String> dependencyChain = new DependencyChain<String>();
 	private ValueRetriever valueRetriever;
+	private Properties messageProperties;
 	private boolean dependenciesBuilt = false;
 	
 	/**
@@ -46,6 +50,7 @@ public class SourceProcessor implements Processor, ValueRetriever {
 	public SourceProcessor(Object defaultSource) {
 		this.defaultSource = defaultSource;
 		this.valueRetriever = this;
+		this.messageProperties = ValidationErrorUtil.getDefaultMessageProperties();
 		AnnotationHandler.registerFields(this, defaultSource);
 	}
 	
@@ -258,6 +263,14 @@ public class SourceProcessor implements Processor, ValueRetriever {
 	@Override
 	public void setValueRetriever(ValueRetriever valueRetriever) {
 		this.valueRetriever = valueRetriever;
+	}
+
+	public Properties getMessageProperties() {
+		return messageProperties;
+	}
+
+	public void setMessageProperties(Properties messageProperties) {
+		this.messageProperties = messageProperties;
 	}
 
 	@Override

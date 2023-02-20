@@ -12,7 +12,7 @@ public class FloatConverter implements InputConverter<String, Float> {
 		try {
 			return Float.parseFloat(inputValue);
 		} catch (Exception e) {
-			throw new ValidationException(fieldName, "Value must be a whole number.", e);
+			throw new ValidationException(fieldName, "converter.float", e);
 		}
 	}
 

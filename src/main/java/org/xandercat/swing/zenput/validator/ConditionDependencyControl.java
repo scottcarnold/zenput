@@ -47,7 +47,7 @@ public class ConditionDependencyControl<T, D> implements DependencyControl<T> {
 				value = valueRetriever.getValueForField(fieldName);
 			}
 		} catch (ZenputException e) {
-			throw new ValidationException(fieldName, "Unable to validate.", e);
+			throw new ValidationException(fieldName, "control.condition.fail", e);
 		}
 		return condition.isMet(value, dependencyValue);
 	}

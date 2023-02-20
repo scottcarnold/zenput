@@ -19,7 +19,7 @@ public class FileConverter implements InputConverter<String, File> {
 		try {
 			return new File(inputValue);
 		} catch (Exception e) {
-			throw new ValidationException(fieldName, "Value is not a valid file reference.", e);
+			throw new ValidationException(fieldName, "converter.file", e);
 		}
 	}
 

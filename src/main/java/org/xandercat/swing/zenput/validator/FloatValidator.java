@@ -1,5 +1,7 @@
 package org.xandercat.swing.zenput.validator;
 
+import java.util.Collections;
+
 import org.xandercat.swing.zenput.annotation.ValidateFloat;
 import org.xandercat.swing.zenput.error.ValidationException;
 
@@ -34,10 +36,10 @@ public class FloatValidator extends AbstractValidator<Float> {
 	@Override
 	public void validate(String fieldName, Float value) throws ValidationException {
 		if (value.floatValue() > this.maxValue) {
-			throw new ValidationException(fieldName, "Value cannot be greater than " + this.maxValue);
+			throw new ValidationException(fieldName, "validator.number.max", Collections.singletonMap("max", this.maxValue));
 		}
 		if (value.floatValue() < this.minValue) {
-			throw new ValidationException(fieldName, "Value cannot be less than " + this.minValue);
+			throw new ValidationException(fieldName, "validator.number.min", Collections.singletonMap("min", this.minValue));
 		}
 	}
 }

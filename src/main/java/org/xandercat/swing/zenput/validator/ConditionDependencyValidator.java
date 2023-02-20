@@ -56,10 +56,10 @@ public class ConditionDependencyValidator<T, D> implements DependencyValidator<T
 		try {
 			dependencyValue = valueRetriever.getValueForField(dependencyFieldName);
 		} catch (ZenputException e) {
-			throw new ValidationException(fieldName, "Unable to validate.", e);
+			throw new ValidationException(fieldName, "validator.condition.fail", e);
 		}
 		if (!condition.isMet(value, dependencyValue)) {
-			throw new ValidationException(fieldName, condition.getDescription(dependencyFieldName));
+			throw new ValidationException(fieldName, condition.getMessageKey(), condition.getMessageParameters());
 		}
 	}
 }

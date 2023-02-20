@@ -47,17 +47,17 @@ public class FileValidator extends AbstractValidator<File> {
 			switch (mode) {
 			case FILES_ONLY:
 				if (value.isDirectory()) {
-					throw new ValidationException(fieldName, "File cannot be a directory.");
+					throw new ValidationException(fieldName, "validator.file.filesOnly");
 				}
 				break;
 			case DIRECTORIES_ONLY:
 				if (!value.isDirectory()) {
-					throw new ValidationException(fieldName, "File is not a directory.");
+					throw new ValidationException(fieldName, "validator.file.directoriesOnly");
 				}
 				break;
 			}
 		} else if (existsRequired) {
-			throw new ValidationException(fieldName, "File or directory does not exist.");
+			throw new ValidationException(fieldName, "validator.file.existsRequired");
 		}
 	}
 }

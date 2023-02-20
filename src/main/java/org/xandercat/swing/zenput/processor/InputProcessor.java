@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -412,6 +413,14 @@ public class InputProcessor implements Processor, ValueRetriever {
 	@Override
 	public void setValueRetriever(ValueRetriever valueRetriever) {
 		throw new UnsupportedOperationException("ValueRetriever cannot be changed for this type of Processor.");
+	}
+
+	public void setMessageProperties(Properties messageProperties) {
+		processor.setMessageProperties(messageProperties);
+	}
+
+	public Properties getMessageProperties() {
+		return processor.getMessageProperties();
 	}
 
 	@Override

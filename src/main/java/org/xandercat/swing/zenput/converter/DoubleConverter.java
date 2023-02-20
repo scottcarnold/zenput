@@ -12,7 +12,7 @@ public class DoubleConverter implements InputConverter<String, Double> {
 		try {
 			return Double.parseDouble(inputValue);
 		} catch (Exception e) {
-			throw new ValidationException(fieldName, "Value must be a whole number.", e);
+			throw new ValidationException(fieldName, "converter.double", e);
 		}
 	}
 

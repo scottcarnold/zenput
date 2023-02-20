@@ -17,7 +17,7 @@ public class IntegerConverter implements InputConverter<String, Integer> {
 		try {
 			return Integer.parseInt(inputValue);
 		} catch (Exception e) {
-			throw new ValidationException(fieldName, "Value must be a whole number.", e);
+			throw new ValidationException(fieldName, "converter.integer", e);
 		}
 	}
 

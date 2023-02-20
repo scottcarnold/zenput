@@ -1,6 +1,8 @@
 package org.xandercat.swing.zenput.condition;
 
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.xandercat.swing.zenput.annotation.CompareTo;
 import org.xandercat.swing.zenput.annotation.ControlNotEquals;
@@ -67,13 +69,21 @@ public class NotEqualsCondition<D, T> implements DependentCondition<D, T> {
 	}
 
 	@Override
-	public String getDescription(String conditionalValueFieldName) {
+	public String getMessageKey() {
 		if (compareToValue == null) {
-			return "Must be NOT equal to value in field " + conditionalValueFieldName;
+			return "condition.notEquals";
 		} else {
-			return "Field " + conditionalValueFieldName + " must NOT have a value of " + compareToValue.toString();
+			return "condition.notEquals.fixedValue";
 		}
 	}
-	
-	
+
+	@Override
+	public Map<String, Object> getMessageParameters() {
+		Map<String, Object> messageParameters = new HashMap<String, Object>();
+		messageParameters.put("dependencyFieldName", dependencyFieldName);
+		if (compareToValue != null) {
+			messageParameters.put("fixedValue", compareToValue);
+		}
+		return messageParameters;
+	}	
 }

@@ -1,0 +1,30 @@
+converter.date=Date does not conform to the expected pattern {pattern}
+converter.double=Value must be a whole number
+converter.file=Value is not a valid file reference
+converter.float=Value must be a number
+converter.integer=Value must be a whole number
+converter.long=Value must be a whole number
+
+control.condition.fail=Unable to validate
+validator.condition.fail=Unable to validate
+
+condition.equals=Must be equal to value in field {dependencyFieldName}
+condition.equals.fixedValue=Field {dependencyFieldName} must have a value of {fixedValue}
+condition.notEmpty=Field {dependencyFieldName} must be not empty
+condition.notEquals=Must NOT be equal to value in field {dependencyFieldName}
+condition.notEquals.fixedValue=Field {dependencyFieldName} must NOT have a value of {fixedValue}
+condition.numeric=Must be {operator} value in field {dependencyFieldName}
+condition.numeric.fixedValue=Field {dependencyFieldName} must be {operator} value of {fixedValue}
+
+validator.date.after=Value must be after {after}
+validator.date.after.inclusive=Value must be on or after {after}
+validator.date.before=Value must be before {before}
+validator.date.before.inclusive=Value must be on or before {before}
+validator.file.filesOnly=File cannot be a directory
+validator.file.directoriesOnly=File is not a directory
+validator.file.existsRequired=File or directory does not exist
+validator.number.min=Value cannot be less than {min}
+validator.number.max=Value cannot be greater than {max}
+validator.required=Value is required
+validator.string.regex=Value must conform to regular expression {regex}
+validator.string.regexName=Value must be a {regexName}

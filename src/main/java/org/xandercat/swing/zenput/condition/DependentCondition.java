@@ -1,5 +1,7 @@
 package org.xandercat.swing.zenput.condition;
 
+import java.util.Map;
+
 /**
  * A condition that is dependent upon some value.
  * 
@@ -20,13 +22,18 @@ public interface DependentCondition<T, D> {
 	public boolean isMet(T fieldValue, D conditionalValue);
 	
 	/**
-	 * Returns a description of this condition.
+	 * Returns a message key that should be associated with this condition.
 	 * 
-	 * @param conditionalValueFieldName field name for the field that contains the conditional value
-	 * 
-	 * @return description of this condition
+	 * @return message key that should be associated with this condition
 	 */
-	public String getDescription(String conditionalValueFieldName);
+	public String getMessageKey();
+	
+	/**
+	 * Returns message parameters that should be associated with this condition.
+	 * 
+	 * @return message parameters that should be associated with this condition.
+	 */
+	public Map<String, Object> getMessageParameters();
 	
 	/**
 	 * Returns the name of the field that the condition dependency exists on.

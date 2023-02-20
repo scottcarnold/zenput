@@ -1,5 +1,7 @@
 package org.xandercat.swing.zenput.validator;
 
+import java.util.Collections;
+
 import org.xandercat.swing.zenput.annotation.ValidateLong;
 import org.xandercat.swing.zenput.error.ValidationException;
 
@@ -39,10 +41,10 @@ public class LongValidator extends AbstractValidator<Long> {
 	@Override
 	public void validate(String fieldName, Long value) throws ValidationException {
 		if (value.longValue() > this.maxValue) {
-			throw new ValidationException(fieldName, "Value cannot be greater than " + this.maxValue);
+			throw new ValidationException(fieldName, "validator.number.max", Collections.singletonMap("max", this.maxValue));
 		}
 		if (value.longValue() < this.minValue) {
-			throw new ValidationException(fieldName, "Value cannot be less than " + this.minValue);
+			throw new ValidationException(fieldName, "validator.number.min", Collections.singletonMap("min", this.minValue));
 		}
 	}
 }

@@ -1,6 +1,8 @@
 package org.xandercat.swing.zenput.condition;
 
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.xandercat.swing.zenput.annotation.CompareTo;
 import org.xandercat.swing.zenput.annotation.ControlNumeric;
@@ -90,11 +92,22 @@ public class NumericCondition implements DependentCondition<Number, Number> {
 	}
 
 	@Override
-	public String getDescription(String conditionalValueFieldName) {
+	public String getMessageKey() {
 		if (compareToFixedValue == null) {
-			return "Must be " + operator + " value in field " + conditionalValueFieldName;
+			return "condition.numeric";
 		} else {
-			return "Field " + conditionalValueFieldName + " must be " + operator + " value of " + compareToFixedValue.toString();
+			return "condition.numeric.fixedValue";
 		}
+	}
+
+	@Override
+	public Map<String, Object> getMessageParameters() {
+		Map<String, Object> messageParameters = new HashMap<String, Object>();
+		messageParameters.put("dependencyFieldName", dependencyFieldName);
+		messageParameters.put("operator", operator);
+		if (compareToFixedValue != null) {
+			messageParameters.put("fixedValue", compareToFixedValue);
+		}
+		return messageParameters;
 	}	
 }

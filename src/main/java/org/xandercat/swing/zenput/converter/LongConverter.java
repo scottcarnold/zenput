@@ -12,7 +12,7 @@ public class LongConverter implements InputConverter<String, Long> {
 		try {
 			return Long.parseLong(inputValue);
 		} catch (Exception e) {
-			throw new ValidationException(fieldName, "Value must be a whole number.", e);
+			throw new ValidationException(fieldName, "converter.long", e);
 		}
 	}
 

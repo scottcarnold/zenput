@@ -37,7 +37,7 @@ public class RequiredValidator extends AbstractValidator<Object> {
 			empty = ((String) value).trim().length() == 0;
 		}
 		if (empty) {
-			throw new ValidationException(fieldName, "Value is required.");
+			throw new ValidationException(fieldName, "validator.required");
 		}
 	}
 

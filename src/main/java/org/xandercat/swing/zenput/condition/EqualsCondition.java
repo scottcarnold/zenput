@@ -1,6 +1,9 @@
 package org.xandercat.swing.zenput.condition;
 
 import java.text.ParseException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.xandercat.swing.zenput.annotation.CompareTo;
 import org.xandercat.swing.zenput.annotation.ControlEquals;
@@ -59,11 +62,21 @@ public class EqualsCondition<D, T> implements DependentCondition<D, T> {
 	}
 
 	@Override
-	public String getDescription(String conditionalValueFieldName) {
+	public String getMessageKey() {
 		if (compareToFixedValue == null) {
-			return "Must be equal to value in field " + conditionalValueFieldName;
+			return "condition.equals";
 		} else {
-			return "Field " + conditionalValueFieldName + " must have a value of " + compareToFixedValue.toString();
+			return "condition.equals.fixedValue";
 		}
+	}
+
+	@Override
+	public Map<String, Object> getMessageParameters() {
+		Map<String, Object> messageParameters = new HashMap<String, Object>();
+		messageParameters.put("dependencyFieldName", dependencyFieldName);
+		if (compareToFixedValue != null) {
+			messageParameters.put("fixedValue", compareToFixedValue);
+		}
+		return messageParameters;
 	}
 }

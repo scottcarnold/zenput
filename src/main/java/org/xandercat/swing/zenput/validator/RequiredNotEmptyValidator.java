@@ -35,7 +35,7 @@ public class RequiredNotEmptyValidator<T> extends AbstractValidator<T> {
 	@Override
 	public void validate(String fieldName, T value) throws ValidationException {
 		if (value == null || emptyTest.isEmpty(value)) {
-			throw new ValidationException(fieldName, "Value is required.");
+			throw new ValidationException(fieldName, "validator.required");
 		}
 	}
 }

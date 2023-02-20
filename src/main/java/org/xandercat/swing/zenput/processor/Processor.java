@@ -1,6 +1,7 @@
 package org.xandercat.swing.zenput.processor;
 
 import java.util.List;
+import java.util.Properties;
 
 import org.xandercat.swing.zenput.error.ValidationException;
 import org.xandercat.swing.zenput.error.ZenputException;
@@ -70,6 +71,20 @@ public interface Processor {
 	 * @throws ZenputException if error occurs registering control
 	 */
 	public void registerControl(String fieldName, Control<?> control) throws ZenputException;
+	
+	/**
+	 * Sets a custom properties for validation error message templates.
+	 * 
+	 * @param messageProperties message properties to use
+	 */
+	public void setMessageProperties(Properties messageProperties);
+	
+	/**
+	 * Returns properties with validation error message templates.
+	 * 
+	 * @return properties with validation error message templates
+	 */
+	public Properties getMessageProperties();
 	
 	/**
 	 * Sets the object responsible for retrieving values by field name.

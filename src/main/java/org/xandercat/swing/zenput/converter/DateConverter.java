@@ -3,6 +3,7 @@ package org.xandercat.swing.zenput.converter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 
 import org.xandercat.swing.zenput.error.ValidationException;
@@ -22,8 +23,8 @@ public class DateConverter implements InputConverter<String, Date> {
 	public Date convertInput(String inputValue, String fieldName) throws ValidationException {
 		try {
 			return dateFormat.parse(inputValue);
-		} catch (ParseException e) {
-			throw new ValidationException(fieldName, "Date does not conform to the expected pattern " + pattern);
+		} catch (ParseException e) { 
+			throw new ValidationException(fieldName, "converter.date", Collections.singletonMap("pattern", pattern));
 		}
 	}
 
