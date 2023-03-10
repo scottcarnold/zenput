@@ -237,14 +237,14 @@ public class InputProcessorTest {
 		assertTrue(inputProcessor.validate());
 		quantityInputField.setText("1000");
 		FocusListener[] listeners = quantityInputField.getFocusListeners();
-		assertTrue(listeners.length > 0);
+		assertTrue(containsValidateOnFocusLostListener(quantityInputField));
 		for (FocusListener listener : listeners) {
 			listener.focusLost(new FocusEvent(quantityInputField, FocusEvent.FOCUS_LOST));
 		}
 		ValidationException ve = inputProcessor.getError("quantity");
 		assertNotNull(ve);
 		inputProcessor.close();
-		assertTrue(quantityInputField.getFocusListeners().length < listeners.length); // focus listener should have been removed on close
+		assertFalse(containsValidateOnFocusLostListener(quantityInputField)); // focus listener should have been removed on close
 	}
 	
 	@Test
