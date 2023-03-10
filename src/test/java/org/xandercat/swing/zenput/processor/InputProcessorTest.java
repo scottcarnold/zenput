@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JTextField;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -244,6 +245,46 @@ public class InputProcessorTest {
 		assertNotNull(ve);
 		inputProcessor.close();
 		assertTrue(quantityInputField.getFocusListeners().length < listeners.length); // focus listener should have been removed on close
+	}
+	
+	@Test
+	public void testValidateOnFocusLostListenerMaintenance() throws Exception {
+		InputProcessor inputProcessor = new InputProcessor(sourceProcessor, CommitMode.COMMIT_ALL, true);
+		final MarkTargetProviderInput input = new MarkTargetProviderInput();
+		InputAccessor<String> inputAccessor = new InputAccessor<String>() {
+			@Override
+			public String getValue() {
+				return input.markTarget1.getText();
+			}
+			@Override
+			public void setValue(String value) {
+				input.markTarget1.setText(value);
+				input.markTarget2.setText(value);
+			}
+			@Override
+			public Object getSource() {
+				return input;
+			}
+		};
+		assertFalse(containsValidateOnFocusLostListener(input.markTarget1));
+		assertFalse(containsValidateOnFocusLostListener(input.markTarget2));
+		inputProcessor.registerInput("quantity", inputAccessor, new IntegerConverter());
+		inputProcessor.registerInput("size", sizeInputField, Size.class);
+		inputProcessor.registerInput("lessThanQuantity", this.lessThanQuantityInputField);
+		assertTrue(containsValidateOnFocusLostListener(input.markTarget1));
+		assertTrue(containsValidateOnFocusLostListener(input.markTarget2));
+		inputProcessor.close();
+		assertFalse(containsValidateOnFocusLostListener(input.markTarget1));
+		assertFalse(containsValidateOnFocusLostListener(input.markTarget2));	
+	}
+	
+	private boolean containsValidateOnFocusLostListener(JComponent component) {
+		for (FocusListener listener : component.getFocusListeners()) {
+			if (listener != null && (listener instanceof ValidateOnFocusLostListener)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	@Test
