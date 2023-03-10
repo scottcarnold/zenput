@@ -1,5 +1,5 @@
 converter.date=Date does not conform to the expected pattern {pattern}
-converter.double=Value must be a whole number
+converter.double=Value must be a number
 converter.file=Value is not a valid file reference
 converter.float=Value must be a number
 converter.integer=Value must be a whole number
