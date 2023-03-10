@@ -61,6 +61,7 @@ public class InputProcessor implements Processor, ValueRetriever {
 	protected final Map<String, Marker<?>> implicitMarkers = new HashMap<String, Marker<?>>();
 	private Map<Class<?>, MarkerBuilder<?>> markerBuilders = new HashMap<Class<?>, MarkerBuilder<?>>();	
 	protected final Map<String, ValidateOnFocusLostListener> validateOnFocusLostListeners = new HashMap<String, ValidateOnFocusLostListener>();
+	protected final Map<String, List<JComponent>> validateOnFocusLostComponents = new HashMap<String, List<JComponent>>();
 	protected final MarkerFactory markerFactory = new MarkerFactory();
 	private Processor processor;
 	private CommitMode commitMode;
@@ -137,6 +138,7 @@ public class InputProcessor implements Processor, ValueRetriever {
 			for (JComponent component : components) {
 				component.addFocusListener(listener);
 			}
+			validateOnFocusLostComponents.put(fieldName, components);
 		}
 		// initialize input field
 		// TODO: Should we also validate here?
@@ -433,16 +435,21 @@ public class InputProcessor implements Processor, ValueRetriever {
 	}
 
 	/**
-	 * Closes down the input processor, removing any focus lost listeners from input components.
+	 * Closes down the input processor, removing any focus lost listeners from input components and clearing collections.
 	 */
 	@Override
 	public void close() {
 		processor.close();
-		for (Map.Entry<String, InputAdapter<?, ?>> entry : this.inputAdapters.entrySet()) {
-			ValidateOnFocusLostListener listener = this.validateOnFocusLostListeners.get(entry.getKey());
-			if (listener != null && entry.getValue().getSource() instanceof JComponent) {
-				((JComponent) entry.getValue().getSource()).removeFocusListener(listener);
+		for (Map.Entry<String, ValidateOnFocusLostListener> entry : this.validateOnFocusLostListeners.entrySet()) {
+			List<JComponent> components = this.validateOnFocusLostComponents.get(entry.getKey());
+			for (JComponent component : components) {
+				component.removeFocusListener(entry.getValue());
 			}
 		}
+		this.inputAdapters.clear();
+		this.implicitMarkers.clear();
+		this.explicitMarkers.clear();
+		this.validateOnFocusLostComponents.clear();
+		this.validateOnFocusLostListeners.clear();
 	}
 }
